@@ -76,28 +76,28 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.75,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+      body: GridView.builder(     // 그리드 뷰
+        padding: const EdgeInsets.all(16),    // 전체 패딩 16
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(      // 그리드 뷰의 레이아웃을 설정
+          crossAxisCount: 2,        // 가로로 2개의 열
+          childAspectRatio: 0.75,   // 가로 세로 비율 3:4
+          crossAxisSpacing: 16,     // 가로 간격 16
+          mainAxisSpacing: 16,      // 세로 간격 16
         ),
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
           return Card(
-            clipBehavior: Clip.antiAlias,
-            elevation: 4,
+            clipBehavior: Clip.antiAlias,   // 카드의 모서리를 둥글게 만들어줌
+            elevation: 4,                 // 그림자 효과
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,     // 자식 위젯을 왼쪽 정렬
               children: [
-                AspectRatio(
-                  aspectRatio: 1,
+                AspectRatio(              // 이미지의 가로 세로 비율을 유지하면서 크기를 조정
+                  aspectRatio: 1,         // 가로 세로 비율 1:1
                   child: Image.network(
                     product['imageUrl'] ?? 'https://placeholder.com/300',
-                    fit: BoxFit.cover,
+                    fit: BoxFit.cover,    // 이미지가 꽉 차게 보이도록 설정
                   ),
                 ),
                 Padding(
@@ -112,9 +112,9 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 4),    // 높이 4만큼 여백 추가
                       Text(
                         '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
                         style: const TextStyle(
