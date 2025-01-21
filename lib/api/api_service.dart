@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'cart_item.dart';
-import 'cart_item_list.dart';
-import 'order_item.dart';
-import 'order_hist.dart';
+import '../cart/cart_item.dart';
+import '../cart/cart_item_list.dart';
+import '../order/order_item.dart';
+import '../order/order_hist.dart';
 
 class ApiService {
   final String baseUrl = 'http://your-api-url/api'; // API URL
@@ -61,7 +61,8 @@ class ApiService {
   }
 
   // 장바구니 상품 삭제
-  Future<List<CartItemList>> removeCartItem(int id) async { // Long을 int로 변경
+  Future<List<CartItemList>> removeCartItem(int id) async {
+    // Long을 int로 변경
     final response = await http.delete(Uri.parse('$baseUrl/cart/$id'),
         headers: {'Authorization': 'Bearer your_token_here'});
 
@@ -70,6 +71,35 @@ class ApiService {
       return data.map((json) => CartItemList.fromJson(json)).toList();
     } else {
       throw Exception('장바구니 아이템 삭제 실패');
+    }
+  }
+
+  // 주문 내역 조회
+  Future<List<OrderHist>> getOrderHistory(String email) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/order/hist/list'),
+      headers: {'Authorization': 'Bearer your_token_here'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => OrderHist.fromJson(json)).toList();
+    } else {
+      throw Exception('구매내역 조회 실패');
+    }
+  }
+
+  // 주문 취소
+  Future<void> cancelOrder(int orderId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/order/$orderId/cancel'),
+      headers: {'Authorization': 'Bearer your_token_here'},
+    );
+
+    if (response.statusCode == 200) {
+      // 주문 취소 성공
+    } else {
+      throw Exception('주문 취소 실패');
     }
   }
 }
