@@ -17,9 +17,9 @@ class UserProvider with ChangeNotifier {
   }
 
   void clearUserData() {
-    email = '';
+    email = null;
     roles = [];
-    accessToken = '';
+    accessToken = null;
     notifyListeners();
   }
 } 
