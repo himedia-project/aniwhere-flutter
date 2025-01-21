@@ -1,11 +1,18 @@
 import 'package:aniwhere_flutter/pages/home_page.dart';
 import 'package:aniwhere_flutter/pages/login_page.dart';
+import 'package:aniwhere_flutter/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:aniwhere_flutter/pages/order_page.dart';
 import 'package:aniwhere_flutter/pages/cart_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      ChangeNotifierProvider(     // ChangeNotifierProvider란?
+        create: (_) => UserProvider(),
+        child: const MyApp(),
+      ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,10 +22,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Aniwhere App',
-      initialRoute: "/",
+      initialRoute: "/login",
       routes: {
-        "/": (context) => const HomePage(),
+        "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
         "/cart": (context) => const CartScreen(),
         "/order": (context) => const OrderScreen(),
