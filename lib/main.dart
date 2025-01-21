@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
-        "/cart": (context) => const CartScreen(),
-        "/order": (context) => const OrderScreen(),
+        "/cart": (context) => const CartPage(),
+        "/order": (context) => const OrderPage(),
         "/order_history": (context) => const OrderhistPage(), // 주문 내역 화면 라우트 추가
       },
     );

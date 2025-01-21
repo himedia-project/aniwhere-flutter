@@ -3,14 +3,14 @@ import 'package:provider/provider.dart';
 import '../api/api_service.dart';
 import '../order/order_item.dart';
 
-class OrderScreen extends StatefulWidget {
-  const OrderScreen({super.key});
+class OrderPage extends StatefulWidget {
+  const OrderPage({super.key});
 
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  _OrderPageState createState() => _OrderPageState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderPageState extends State<OrderPage> {
   String? orderId; // 주문 ID를 저장할 변수
   String? errorMessage; // 오류 메시지를 저장할 변수
 
