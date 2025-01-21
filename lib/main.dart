@@ -1,17 +1,26 @@
+import 'package:aniwhere_flutter/pages/home_page.dart';
+import 'package:aniwhere_flutter/pages/login_page.dart';
 import 'package:flutter/material.dart';
-import 'cart_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '장바구니 앱',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: CartScreen(),
+      title: 'Aniwhere App',
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const HomePage(),
+        "/login": (context) => const LoginPage(),
+      },
     );
   }
 }
+
+
