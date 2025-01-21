@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../api/api_service.dart';
 import '../order/order_item.dart';
 
@@ -10,12 +11,12 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  final ApiService apiService = ApiService();
   String? orderId; // 주문 ID를 저장할 변수
   String? errorMessage; // 오류 메시지를 저장할 변수
 
   @override
   Widget build(BuildContext context) {
+    final apiService = Provider.of<ApiService>(context);
     return Scaffold(
       appBar: AppBar(title: Text('주문하기')),
       body: Center(
@@ -26,10 +27,8 @@ class _OrderScreenState extends State<OrderScreen> {
               onPressed: () async {
                 try {
                   // 주문 생성 로직
-                  final newOrderId =
-                      await apiService.createOrder('user@example.com', [
-                    OrderItem(
-                        productId: 1, productName: '지적재산권1', orderPrice: 1000),
+                  final newOrderId = await apiService.createOrder('user@example.com', [
+                    OrderItem(productId: 1, productName: '지적재산권1', orderPrice: 1000),
                   ]);
                   setState(() {
                     orderId = newOrderId.toString(); // 주문 ID 업데이트

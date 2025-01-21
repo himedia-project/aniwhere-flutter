@@ -6,7 +6,7 @@ import '../order/order_item.dart';
 import '../order/order_hist.dart';
 
 class ApiService {
-  final String baseUrl = 'http://your-api-url/api'; // API URL
+  final String baseUrl = 'http://10.0.2.2:8080/api'; // API URL
 
   // 주문 생성
   Future<int?> createOrder(String email, List<OrderItem> orderItems) async {
