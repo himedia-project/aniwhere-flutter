@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         "/login": (context) => const LoginPage(),
         "/search": (context) => const SearchResultPage(searchKeyword: ''),
         "/branch": (context) => const BranchPage(),
-        "/category": (context) => const ProductPage(),
+        "/product": (context) => const ProductPage(),
         "/tag": (context) => const ProductPage(),
         "/cart": (context) => const CartPage(),
         "/order": (context) => const OrderPage(),

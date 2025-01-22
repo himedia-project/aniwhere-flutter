@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> mdPickProducts = [];
   List<dynamic> adultProducts = [];
   List<dynamic> newProducts = [];
+  List<dynamic> categories = [];
   final List<String> bannerImages = [
     'assets/banner1.jpg',
     'assets/banner2.jpg',
@@ -36,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _pageController = PageController(initialPage: 0);
     fetchAllProducts();
+    fetchCategories();
     // 배너 자동 슬라이드 타이머 설정
     Timer.periodic(const Duration(seconds: 5), (Timer timer) {
       if (mounted) {
@@ -111,6 +113,24 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       print('Error fetching new products: $e');
+    }
+  }
+
+  Future<void> fetchCategories() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiUtils.baseUrl}/category/list'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        print('Fetched categories: $responseData');
+        setState(() {
+          categories = responseData;
+        });
+      }
+    } catch (e) {
+      print('Error fetching categories: $e');
     }
   }
 
@@ -242,6 +262,63 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildCategories() {
+    print('Building categories: $categories');
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              '카테고리',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                final category = categories[index];
+                print('Category at index $index: $category');
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/product',
+                        arguments: {
+                          'categoryId': category['categoryId'],
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      side: BorderSide(color: Colors.grey[300]!),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: Text(category['name'] ?? ''),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -323,6 +400,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            _buildCategories(),
             _buildProductList('MD Pick`s 이번 주 추천!', mdPickProducts),
             _buildProductList('어른들의 세계', adultProducts),
             _buildProductList('New 최신순!', newProducts),
