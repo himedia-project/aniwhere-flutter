@@ -280,7 +280,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
-              aspectRatio: 16 / 7,
+              aspectRatio: 16 / 11,
               child: Stack(
                 children: [
                   PageView.builder(
