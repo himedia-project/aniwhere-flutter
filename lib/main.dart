@@ -9,8 +9,7 @@ import 'package:aniwhere_flutter/pages/cart_page.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:aniwhere_flutter/pages/search_result_page.dart';
-
-
+import 'package:aniwhere_flutter/pages/orderhist_page.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
@@ -40,16 +39,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Aniwhere App',
-      initialRoute: "/home",
+      initialRoute: "/login",
       routes: {
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
-        "/cart": (context) => const CartScreen(),
-        "/order": (context) => const OrderScreen(),
         "/search": (context) => const SearchResultPage(searchKeyword: ''),
         "/branch": (context) => const BranchPage(),
         "/category": (context) => const ProductPage(),
         "/tag": (context) => const ProductPage(),
+        "/cart": (context) => const CartPage(),
+        "/order": (context) => const OrderPage(),
+        "/order_history": (context) => const OrderhistPage(),
       },
     );
   }

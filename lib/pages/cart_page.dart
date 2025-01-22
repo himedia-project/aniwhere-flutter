@@ -3,14 +3,14 @@ import '../api/api_service.dart';
 import '../cart/cart_item.dart';
 import '.././cart/cart_item_list.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen ({super.key});
+class CartPage extends StatefulWidget {
+  const CartPage ({super.key});
 
   @override
-  _CartScreenState createState() => _CartScreenState();
+  _CartPageState createState() => _CartPageState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _CartPageState extends State<CartPage> {
   final ApiService apiService = ApiService();
   List<CartItemList> cartItems = [];
 
