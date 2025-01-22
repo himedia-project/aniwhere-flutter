@@ -6,6 +6,7 @@ import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../util/api_utils.dart';
 import '../pages/search_result_page.dart';
@@ -429,6 +430,42 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ProductSearchDelegate extends SearchDelegate {
+  final List<String> _searchHistory = [];
+  static const String _searchHistoryKey = 'search_history';
+
+  ProductSearchDelegate() {
+    _loadSearchHistory();
+  }
+
+  // 검색 기록 로드
+  Future<void> _loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final history = prefs.getStringList(_searchHistoryKey) ?? [];
+    _searchHistory.clear();
+    _searchHistory.addAll(history);
+  }
+
+  // 검색 기록 저장
+  Future<void> _saveSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_searchHistoryKey, _searchHistory);
+  }
+
+  // 새 검색어 추가
+  void _addSearchTerm(String term) {
+    if (term.isEmpty) return;
+    
+    // 이미 존재하는 검색어라면 제거
+    _searchHistory.remove(term);
+    // 최근 검색어를 맨 앞에 추가
+    _searchHistory.insert(0, term);
+    // 최대 10개까지만 저장
+    if (_searchHistory.length > 10) {
+      _searchHistory.removeLast();
+    }
+    _saveSearchHistory();
+  }
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -436,6 +473,7 @@ class ProductSearchDelegate extends SearchDelegate {
         icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
+          showSuggestions(context);
         },
       ),
     ];
@@ -459,13 +497,43 @@ class ProductSearchDelegate extends SearchDelegate {
       );
     }
     
+    _addSearchTerm(query); // 검색 실행 시 기록 추가
     return SearchResultPage(searchKeyword: query);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Center(
-      child: Text('검색어를 입력하세요'),
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // suggestions 리스트를 builder 내부로 이동
+        final suggestions = _searchHistory.where((term) => 
+          term.toLowerCase().contains(query.toLowerCase())
+        ).toList();
+
+        return ListView.builder(
+          itemCount: suggestions.length,
+          itemBuilder: (context, index) {
+            final suggestion = suggestions[index];
+            return ListTile(
+              leading: const Icon(Icons.history),
+              title: Text(suggestion),
+              trailing: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    _searchHistory.remove(suggestion);
+                    _saveSearchHistory();
+                  });
+                },
+              ),
+              onTap: () {
+                query = suggestion;
+                showResults(context);
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
