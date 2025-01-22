@@ -12,6 +12,7 @@ import 'package:aniwhere_flutter/pages/search_result_page.dart';
 import 'package:aniwhere_flutter/pages/orderhist_page.dart';
 import 'package:aniwhere_flutter/pages/join_page.dart';
 import 'package:aniwhere_flutter/pages/category_product_page.dart';
+import 'package:aniwhere_flutter/pages/splash_screen.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
@@ -41,8 +42,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Aniwhere App',
-      initialRoute: "/login",
+      initialRoute: "/",
       routes: {
+        "/": (context) => const SplashScreen(),
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
         "/join": (context) => const JoinPage(),
