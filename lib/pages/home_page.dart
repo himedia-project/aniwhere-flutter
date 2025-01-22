@@ -354,7 +354,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.store),
+            icon: const Icon(Icons.calendar_today),
             onPressed: () {
               Navigator.pushNamed(context, '/branch');
             },
