@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../util/api_utils.dart';
 import '../pages/search_result_page.dart';
@@ -245,7 +246,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('애니메이션'),
+        title: Text(
+          'Aniwhere',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 24,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

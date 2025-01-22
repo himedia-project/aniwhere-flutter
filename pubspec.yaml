@@ -19,6 +19,7 @@ dependencies:
   intl: ^0.18.0
   kakao_flutter_sdk_user: ^1.9.6
   kakao_flutter_sdk: ^1.9.6
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -30,4 +31,3 @@ flutter:
   assets:
     - assets/
   uses-material-design: true
-

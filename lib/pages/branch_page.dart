@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BranchPage extends StatefulWidget {
   const BranchPage({super.key});
@@ -57,7 +58,7 @@ class _BranchPageState extends State<BranchPage> {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             '$year년 작품',
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -158,7 +159,13 @@ class _BranchPageState extends State<BranchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('연도별 작품'),
+        title: Text(
+          '연도별 작품',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 24,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
