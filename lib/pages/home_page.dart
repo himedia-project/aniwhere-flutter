@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             title,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -220,7 +220,7 @@ class _HomePageState extends State<HomePage> {
                       product['name'] ?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
                       style: const TextStyle(
-                        color: Colors.blue,
+                        color: Color(0xFF6B8DD6),
                         fontSize: 14,
                       ),
                     ),
