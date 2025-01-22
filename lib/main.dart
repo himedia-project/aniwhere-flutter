@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:aniwhere_flutter/pages/order_page.dart';
 import 'package:aniwhere_flutter/pages/cart_page.dart';
 import 'package:provider/provider.dart';
+import 'package:aniwhere_flutter/pages/orderhist_page.dart';
 
 void main() {
   runApp(
@@ -28,8 +29,9 @@ class MyApp extends StatelessWidget {
       routes: {
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
-        "/cart": (context) => const CartScreen(),
-        "/order": (context) => const OrderScreen(),
+        "/cart": (context) => const CartPage(),
+        "/order": (context) => const OrderPage(),
+        "/order_history": (context) => const OrderhistPage(),
       },
     );
   }
