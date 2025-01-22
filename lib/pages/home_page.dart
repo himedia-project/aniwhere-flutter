@@ -350,6 +350,11 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.logout),
             onPressed: _logout,
           ),
+          IconButton(
+              onPressed: (){
+                Navigator.pushNamed(context, '/cart');
+              }, 
+              icon: const Icon(Icons.shopping_cart))
         ],
       ),
       body: SingleChildScrollView(
