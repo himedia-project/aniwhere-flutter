@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/logo.jpg', // 로고 이미지 경로를 실제 프로젝트의 이미지 경로로 수정해주세요
+              'assets/logo.png', // 로고 이미지 경로를 실제 프로젝트의 이미지 경로로 수정해주세요
               width: 200,
               height: 200,
             ),
