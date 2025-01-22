@@ -22,4 +22,6 @@ class UserProvider with ChangeNotifier {
     accessToken = null;
     notifyListeners();
   }
+
+  bool get isLoggedIn => accessToken != null;
 } 

@@ -63,13 +63,31 @@ class _HomePageState extends State<HomePage> {
       );
     }
   }
-
+      /////////////로그인상태확인
+  void _goToCartPage() {
+    // 로그인 상태 확인
+    final userProvider = context.read<UserProvider>();
+    if (userProvider.isLoggedIn) {
+      // 로그인된 경우 장바구니 페이지로 이동
+      Navigator.pushNamed(context, '/cart');
+    } else {
+      // 로그인되지 않은 경우 로그인 페이지로 이동
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+  ///////////////////////
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('제품 목록'),
         actions: [
+          IconButton(
+            ///////////////////////////장바구니
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: _goToCartPage, // 장바구니 페이지로 이동
+          ),
+          /////////////////////////////
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: _logout,
@@ -133,4 +151,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
