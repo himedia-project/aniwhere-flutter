@@ -1,38 +1,38 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:aniwhere_flutter/pages/home_page.dart';
 import 'package:aniwhere_flutter/pages/login_page.dart';
+import 'package:aniwhere_flutter/providers/user_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:aniwhere_flutter/pages/order_page.dart';
 import 'package:aniwhere_flutter/pages/cart_page.dart';
-import 'package:aniwhere_flutter/pages/orderhist_page.dart'; // 추가된 주문 내역 화면
-import '../api/api_service.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        Provider(create: (_) => ApiService()), // ApiService를 provider로 등록
-      ],
-      child: const MyApp(),
-    ),
+      ChangeNotifierProvider(     // ChangeNotifierProvider란?
+        create: (_) => UserProvider(),
+        child: const MyApp(),
+      ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Aniwhere App',
-      initialRoute: "/",
+      initialRoute: "/login",
       routes: {
-        "/": (context) => const HomePage(),
+        "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
-        "/cart": (context) => const CartPage(),
-        "/order": (context) => const OrderPage(),
-        "/order_history": (context) => const OrderhistPage(), // 주문 내역 화면 라우트 추가
+        "/cart": (context) => const CartScreen(),
+        "/order": (context) => const OrderScreen(),
       },
     );
   }
 }
+
+
