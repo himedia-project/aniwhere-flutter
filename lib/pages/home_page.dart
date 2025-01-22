@@ -338,12 +338,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Aniwhere',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            fontSize: 24,
-          ),
+        title: Image.asset(
+          'assets/logo.png',
+          height: 40, // AppBar에 적절한 높이
+          fit: BoxFit.contain, // 이미지 비율 유지
         ),
         actions: [
           IconButton(
