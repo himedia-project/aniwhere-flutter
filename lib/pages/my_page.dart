@@ -121,10 +121,6 @@ class _MyPageState extends State<MyPage> {
         title: const Text('마이페이지'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
-          ),
-          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.pushNamed(context, '/settings');
@@ -237,6 +233,29 @@ class _MyPageState extends State<MyPage> {
                     onTap: () => Navigator.pushNamed(context, '/faq'),
                   ),
                 ],
+              ),
+            ),
+            
+            // 로그아웃 버튼
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _logout,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red[200],
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text(
+                    '로그아웃',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
