@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Aniwhere App',
-      initialRoute: "/login",
+      initialRoute: "/home",
       routes: {
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),

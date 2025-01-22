@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
 import '../util/api_utils.dart';
 
@@ -15,29 +16,99 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic> products = [];
+  List<dynamic> mdPickProducts = [];
+  List<dynamic> adultProducts = [];
+  List<dynamic> newProducts = [];
+  final List<String> bannerImages = [
+    'assets/banner1.jpg',
+    'assets/banner2.jpg',
+    'assets/banner3.jpg',
+    'assets/banner4.jpg',
+    'assets/banner5.jpg',
+  ];
+  int _currentBannerIndex = 0;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    fetchProducts();
+    _pageController = PageController(initialPage: 0);
+    fetchAllProducts();
+    // 배너 자동 슬라이드 타이머 설정
+    // Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+    //   if (mounted) {
+    //     final nextPage = (_currentBannerIndex + 1) % bannerImages.length;
+    //     _pageController.animateToPage(
+    //       nextPage,
+    //       duration: const Duration(milliseconds: 500),
+    //       curve: Curves.easeInOut,
+    //     );
+    //   }
+    // });
   }
 
-  Future<void> fetchProducts() async {
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> fetchAllProducts() async {
+    await Future.wait([
+      fetchMdPickProducts(),
+      fetchAdultProducts(),
+      fetchNewProducts(),
+    ]);
+  }
+
+  Future<void> fetchMdPickProducts() async {
     try {
       final response = await http.get(
-        Uri.parse('${ApiUtils.baseUrl}/product/list'),
-        headers: ApiUtils.getAuthHeaders(context),
+        Uri.parse('${ApiUtils.baseUrl}/product/list?mdPick=Y'),
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final List<dynamic> responseData = jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
-          products = data['data'];
+          mdPickProducts = responseData;
         });
       }
     } catch (e) {
-      print('Error fetching products: $e');
+      print('Error fetching MD Pick products: $e');
+    }
+  }
+
+  Future<void> fetchAdultProducts() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiUtils.baseUrl}/product/list?adult=Y'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        setState(() {
+          adultProducts = responseData;
+        });
+      }
+    } catch (e) {
+      print('Error fetching adult products: $e');
+    }
+  }
+
+  Future<void> fetchNewProducts() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${ApiUtils.baseUrl}/product/list'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        setState(() {
+          newProducts = responseData;
+        });
+      }
+    } catch (e) {
+      print('Error fetching new products: $e');
     }
   }
 
@@ -64,11 +135,116 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Widget _buildProductList(String title, List<dynamic> products) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 320,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              final String imageUrl = product['uploadFileNames'] != null && 
+                                    product['uploadFileNames'].isNotEmpty
+                  ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
+                  : '';
+              return Container(
+                width: 200,
+                margin: const EdgeInsets.only(left: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.grey[300]!,
+                            width: 1,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(Icons.error),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      product['name'] ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+                      style: const TextStyle(
+                        color: Colors.blue,
+                        fontSize: 14,
+                      ),
+                    ),
+                    if (product['adult'] == 'Y')
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          '성인',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('제품 목록'),
+        title: const Text('애니메이션'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -76,59 +252,59 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: GridView.builder(     // 그리드 뷰
-        padding: const EdgeInsets.all(16),    // 전체 패딩 16
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(      // 그리드 뷰의 레이아웃을 설정
-          crossAxisCount: 2,        // 가로로 2개의 열
-          childAspectRatio: 0.75,   // 가로 세로 비율 3:4
-          crossAxisSpacing: 16,     // 가로 간격 16
-          mainAxisSpacing: 16,      // 세로 간격 16
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return Card(
-            clipBehavior: Clip.antiAlias,   // 카드의 모서리를 둥글게 만들어줌
-            elevation: 4,                 // 그림자 효과
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,     // 자식 위젯을 왼쪽 정렬
-              children: [
-                AspectRatio(              // 이미지의 가로 세로 비율을 유지하면서 크기를 조정
-                  aspectRatio: 1,         // 가로 세로 비율 1:1
-                  child: Image.network(
-                    product['imageUrl'] ?? 'https://placeholder.com/300',
-                    fit: BoxFit.cover,    // 이미지가 꽉 차게 보이도록 설정
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    itemCount: bannerImages.length,
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentBannerIndex = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      return Image.asset(
+                        bannerImages[index],
+                        fit: BoxFit.cover,
+                      );
+                    },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product['name'] ?? '',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        // overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),    // 높이 4만큼 여백 추가
-                      Text(
-                        '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.blue,
+                  Positioned(
+                    bottom: 10,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        bannerImages.length,
+                        (index) => Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _currentBannerIndex == index
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.5),
+                          ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          );
-        },
+            _buildProductList('MD Pick`s 이번 주 추천!', mdPickProducts),
+            _buildProductList('어른들의 세계', adultProducts),
+            _buildProductList('New 최신순!', newProducts),
+          ],
+        ),
       ),
     );
   }
