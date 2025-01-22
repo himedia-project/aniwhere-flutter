@@ -356,14 +356,17 @@ class _HomePageState extends State<HomePage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: (){
+              Navigator.pushNamed(context, '/cart');
+            },
           ),
           IconButton(
-              onPressed: (){
-                Navigator.pushNamed(context, '/cart');
-              }, 
-              icon: const Icon(Icons.shopping_cart))
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.pushNamed(context, '/mypage');
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(

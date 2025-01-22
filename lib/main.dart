@@ -1,6 +1,7 @@
 import 'package:aniwhere_flutter/pages/branch_page.dart';
 import 'package:aniwhere_flutter/pages/home_page.dart';
 import 'package:aniwhere_flutter/pages/login_page.dart';
+import 'package:aniwhere_flutter/pages/my_page.dart';
 import 'package:aniwhere_flutter/pages/product_page.dart';
 import 'package:aniwhere_flutter/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
             categoryName: args['categoryName'],
           );
         },
+        "/mypage": (context) => const MyPage(),
       },
     );
   }
