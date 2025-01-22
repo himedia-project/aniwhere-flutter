@@ -103,10 +103,9 @@ class _LoginPageState extends State<LoginPage> {
       print('카카오 사용자 정보: ${user.toString()}');
       // 서버에 카카오 로그인 정보를 전송하고 JWT 토큰을 받아옴
       final response = await http.post(
-        Uri.parse('${ApiUtils.baseUrl}/member/kakao-login'),
+        Uri.parse('${ApiUtils.baseUrl}/member/kakao/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'kakaoId': user.id,
           'email': user.kakaoAccount?.email,
         }),
       );
