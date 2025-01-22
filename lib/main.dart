@@ -6,6 +6,7 @@ import 'package:aniwhere_flutter/pages/order_page.dart';
 import 'package:aniwhere_flutter/pages/cart_page.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
+import 'package:aniwhere_flutter/pages/search_result_page.dart';
 
 
 
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         "/login": (context) => const LoginPage(),
         "/cart": (context) => const CartScreen(),
         "/order": (context) => const OrderScreen(),
+        "/search": (context) => const SearchResultPage(searchKeyword: ''),
       },
     );
   }

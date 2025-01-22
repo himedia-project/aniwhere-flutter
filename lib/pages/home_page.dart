@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 
 import '../util/api_utils.dart';
+import '../pages/search_result_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -247,6 +248,15 @@ class _HomePageState extends State<HomePage> {
         title: const Text('애니메이션'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: ProductSearchDelegate(),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: _logout,
           ),
@@ -306,6 +316,48 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProductSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query.trim().isEmpty) {
+      return const Center(
+        child: Text('검색어를 입력해주세요'),
+      );
+    }
+    
+    return SearchResultPage(searchKeyword: query);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return const Center(
+      child: Text('검색어를 입력하세요'),
     );
   }
 }
