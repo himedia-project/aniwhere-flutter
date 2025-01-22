@@ -10,6 +10,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
 import 'package:aniwhere_flutter/pages/search_result_page.dart';
 import 'package:aniwhere_flutter/pages/orderhist_page.dart';
+import 'package:aniwhere_flutter/pages/join_page.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
+        "/join": (context) => const JoinPage(),
         "/search": (context) => const SearchResultPage(searchKeyword: ''),
         "/branch": (context) => const BranchPage(),
         "/product": (context) => const ProductPage(),

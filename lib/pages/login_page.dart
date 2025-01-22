@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // TODO: 회원가입 페이지로 이동
+                  Navigator.pushNamed(context, '/join');
                 },
                 child: const Text('계정이 없으신가요? 회원가입'),
               ),
