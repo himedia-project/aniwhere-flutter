@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
-                          '성인',
+                          '19금',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -264,21 +264,22 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCategories() {
     print('Building categories: $categories');
+    final List<Color> categoryColors = [
+      const Color(0xFFFF6B6B),  // 빨간색 계열 (기존 첫번째)
+      const Color(0xFFFFBE0B),  // 노란색 계열
+      const Color(0xFF4ECDC4),  // 청록색 계열 (기존 두번째)
+      const Color(0xFF845EC2),  // 보라색 계열
+      const Color(0xFF4CAF50),  // 초록색 계열
+      const Color(0xFFFF9A8B),  // 연한 핑크
+      const Color(0xFFFF7B54),  // 주황색 계열
+      const Color(0xFF00B4D8),  // 하늘색
+    ];
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '카테고리',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           SizedBox(
             height: 50,
             child: ListView.builder(
@@ -287,28 +288,36 @@ class _HomePageState extends State<HomePage> {
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
-                print('Category at index $index: $category');
+                // 색상 인덱스를 순환하여 사용
+                final colorIndex = index % categoryColors.length;
+                
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
-                        '/product',
+                        '/category_products',
                         arguments: {
                           'categoryId': category['categoryId'],
+                          'categoryName': category['name'],
                         },
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      side: BorderSide(color: Colors.grey[300]!),
+                      backgroundColor: categoryColors[colorIndex],
+                      foregroundColor: Colors.white,  // 텍스트 색상을 흰색으로 변경
+                      elevation: 3,  // 그림자 효과 추가
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: Text(category['name'] ?? ''),
+                    child: Text(
+                      category['name'] ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,  // 텍스트를 굵게 설정
+                      ),
+                    ),
                   ),
                 );
               },
@@ -408,7 +417,7 @@ class _HomePageState extends State<HomePage> {
             _buildCategories(),
             _buildProductList('MD Pick`s 이번 주 추천!', mdPickProducts),
             _buildProductList('어른들의 세계', adultProducts),
-            _buildProductList('New 최신순!', newProducts),
+            _buildProductList('New 신작 작품들!', newProducts),
           ],
         ),
       ),
