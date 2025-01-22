@@ -265,12 +265,12 @@ class _HomePageState extends State<HomePage> {
   Widget _buildCategories() {
     print('Building categories: $categories');
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Text(
               '카테고리',
               style: TextStyle(
