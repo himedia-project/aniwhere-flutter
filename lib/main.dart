@@ -1,5 +1,7 @@
+import 'package:aniwhere_flutter/pages/branch_page.dart';
 import 'package:aniwhere_flutter/pages/home_page.dart';
 import 'package:aniwhere_flutter/pages/login_page.dart';
+import 'package:aniwhere_flutter/pages/product_page.dart';
 import 'package:aniwhere_flutter/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:aniwhere_flutter/pages/order_page.dart';
@@ -45,6 +47,9 @@ class MyApp extends StatelessWidget {
         "/cart": (context) => const CartScreen(),
         "/order": (context) => const OrderScreen(),
         "/search": (context) => const SearchResultPage(searchKeyword: ''),
+        "/branch": (context) => const BranchPage(),
+        "/category": (context) => const ProductPage(),
+        "/tag": (context) => const ProductPage(),
       },
     );
   }
