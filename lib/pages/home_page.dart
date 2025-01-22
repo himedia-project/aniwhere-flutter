@@ -35,16 +35,16 @@ class _HomePageState extends State<HomePage> {
     _pageController = PageController(initialPage: 0);
     fetchAllProducts();
     // 배너 자동 슬라이드 타이머 설정
-    // Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-    //   if (mounted) {
-    //     final nextPage = (_currentBannerIndex + 1) % bannerImages.length;
-    //     _pageController.animateToPage(
-    //       nextPage,
-    //       duration: const Duration(milliseconds: 500),
-    //       curve: Curves.easeInOut,
-    //     );
-    //   }
-    // });
+    Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (mounted) {
+        final nextPage = (_currentBannerIndex + 1) % bannerImages.length;
+        _pageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   @override
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchNewProducts() async {
     try {
       final response = await http.get(
-        Uri.parse('${ApiUtils.baseUrl}/product/list'),
+        Uri.parse('${ApiUtils.baseUrl}/product/list?isNew=Y'),
       );
 
       if (response.statusCode == 200) {
