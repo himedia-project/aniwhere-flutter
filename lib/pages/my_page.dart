@@ -186,7 +186,7 @@ class _MyPageState extends State<MyPage> {
                   _buildMenuItem(
                     icon: Icons.shopping_bag,
                     title: '주문 내역',
-                    onTap: () => Navigator.pushNamed(context, '/orders'),
+                    onTap: () => Navigator.pushNamed(context, '/orderHist'),
                   ),
                   _buildMenuItem(
                     icon: Icons.shopping_cart,

@@ -16,14 +16,18 @@ import 'package:aniwhere_flutter/pages/category_product_page.dart';
 import 'package:aniwhere_flutter/pages/splash_screen.dart';
 import 'package:aniwhere_flutter/pages/product_detail_page.dart';
 import 'package:aniwhere_flutter/pages/tag_product_page.dart';
+import 'package:aniwhere_flutter/providers/order_provider.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
   runApp(
-      ChangeNotifierProvider(     // ChangeNotifierProvider란?
-        create: (_) => UserProvider(),
-        child: const MyApp(),
-      ),
+    MultiProvider( // MultiProvider로 변경
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()), // OrderProvider 추가
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -57,7 +61,7 @@ class MyApp extends StatelessWidget {
         "/tag": (context) => const ProductPage(),
         "/cart": (context) => const CartPage(),
         "/order": (context) => const OrderPage(),
-        "/order_history": (context) => const OrderhistPage(),
+        "/orderHist": (context) => const OrderHistPage(),
         "/category_products": (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return CategoryProductPage(
