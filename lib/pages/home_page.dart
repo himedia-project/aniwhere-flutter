@@ -10,9 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';    // 검색 기록
 import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
 
 import '../util/api_utils.dart';
-import '../pages/search_result_page.dart';
 import '../pages/product_detail_page.dart';
 import '../widgets/common_bottom_navigation.dart';
+import '../pages/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -508,7 +508,11 @@ class ProductSearchDelegate extends SearchDelegate {
     }
     
     _addSearchTerm(query); // 검색 실행 시 기록 추가
-    return SearchResultPage(searchKeyword: query);
+    return ProductListPage(
+      title: '검색 결과: $query',
+      apiPath: '/product/list',
+      queryParams: {'searchKeyword': query},
+    );
   }
 
   @override
