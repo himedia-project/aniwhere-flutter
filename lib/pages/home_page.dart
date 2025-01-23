@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';  // 숫자 포맷팅을 위한 패키지 추가
 import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';    // 검색 기록 저장을 위한 패키지 추가
+import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
 
 import '../util/api_utils.dart';
 import '../pages/search_result_page.dart';
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     'assets/banner4.jpg',
     'assets/banner5.jpg',
   ];
-  int _currentBannerIndex = 0;
+  int _currentBannerIndex = 0;    // 현재 배너 인덱스
   late PageController _pageController;
 
   @override
@@ -290,7 +290,7 @@ class _HomePageState extends State<HomePage> {
             height: 50,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8), // 좌우 여백 추가
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
@@ -338,11 +338,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,   // 뒤로 가기 버튼을 숨김
         title: Image.asset(
           'assets/logo.png',
           height: 40,
-          fit: BoxFit.contain,
+          fit: BoxFit.contain,    // 이미지가 영역에 맞게 확대/축소
         ),
         actions: [
           IconButton(
@@ -350,7 +350,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: ProductSearchDelegate(),
+                delegate: ProductSearchDelegate(),    // 검색 위임자를 사용
               );
             },
           ),
@@ -433,6 +433,9 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+/**
+ * 검색 위임자 클래스
+ */
 class ProductSearchDelegate extends SearchDelegate {
   final List<String> _searchHistory = [];
   static const String _searchHistoryKey = 'search_history';
@@ -443,7 +446,7 @@ class ProductSearchDelegate extends SearchDelegate {
 
   // 검색 기록 로드
   Future<void> _loadSearchHistory() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();    // SharedPreferences는 비동기로 초기화
     final history = prefs.getStringList(_searchHistoryKey) ?? [];
     _searchHistory.clear();
     _searchHistory.addAll(history);
