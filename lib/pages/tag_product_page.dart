@@ -52,7 +52,7 @@ class _TagProductPageState extends State<TagProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('#${widget.tagName} 작품'),
+        title: Text('#${widget.tagName}'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
