@@ -75,77 +75,91 @@ class _BranchPageState extends State<BranchPage> {
                                     product['uploadFileNames'].isNotEmpty
                   ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
                   : '';
-              return Container(
-                width: 200,
-                margin: const EdgeInsets.only(left: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.grey[300]!,
-                            width: 1,
+              return GestureDetector(
+                onTap: () async {
+                  if (product['adult'] == 'Y') {
+                    final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                    if (!isAdultVerified) return;
+                  }
+                  
+                  Navigator.pushNamed(
+                    context,
+                    '/product_detail',
+                    arguments: {'productId': product['id']},
+                  );
+                },
+                child: Container(
+                  width: 200,
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.grey[300]!,
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: const Center(
-                                  child: Icon(Icons.error),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      product['name'] ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-                      style: const TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                      ),
-                    ),
-                    if (product['adult'] == 'Y')
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          '성인',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: Icon(Icons.error),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
-                  ],
+                      const SizedBox(height: 12),
+                      Text(
+                        product['name'] ?? '',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontSize: 14,
+                        ),
+                      ),
+                      if (product['adult'] == 'Y')
+                        Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            '19금',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               );
             },

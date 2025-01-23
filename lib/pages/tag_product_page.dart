@@ -73,7 +73,12 @@ class _TagProductPageState extends State<TagProductPage> {
                     : '';
 
                 return GestureDetector(
-                  onTap: () {
+                  onTap: () async {
+                    if (product['adult'] == 'Y') {
+                      final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                      if (!isAdultVerified) return;
+                    }
+                    
                     Navigator.pushNamed(
                       context,
                       '/product_detail',

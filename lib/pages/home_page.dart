@@ -186,7 +186,12 @@ class _HomePageState extends State<HomePage> {
                   ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
                   : '';
               return GestureDetector(
-                onTap: () {
+                onTap: () async {
+                  if (product['adult'] == 'Y') {
+                    final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                    if (!isAdultVerified) return;
+                  }
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(
