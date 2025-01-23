@@ -165,11 +165,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        productDetail!['name'],
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          productDetail!['name'],
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       if (productDetail!['adult'] == 'Y')
@@ -248,9 +250,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.category_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '카테고리: ${productDetail!['categoryName']}',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '카테고리: ${productDetail!['categoryName']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -259,9 +263,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.business_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '제작사: ${productDetail!['manufacturer']}',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '제작사: ${productDetail!['manufacturer']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -270,9 +276,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.video_library_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '총 화수: ${productDetail!['totalEpisode']}화',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '총 화수: ${productDetail!['totalEpisode']}화',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -281,9 +289,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.calendar_today_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '방영일: ${productDetail!['releaseDate']}',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '방영일: ${productDetail!['releaseDate']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
