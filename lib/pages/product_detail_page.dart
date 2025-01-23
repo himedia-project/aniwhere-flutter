@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../widgets/common_bottom_navigation.dart';
+
+import 'home_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
@@ -136,7 +139,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(productDetail!['name']),
+        automaticallyImplyLeading: false,
+        title: Image.asset(
+          'assets/logo.png',
+          height: 40,
+          fit: BoxFit.contain,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: ProductSearchDelegate(),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -313,48 +332,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: addToCart,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF6B8DD6),
-                  side: const BorderSide(color: Color(0xFF6B8DD6)),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text('장바구니'),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: directOrder,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6B8DD6),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text('구매하기'),
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: -1),
     );
   }
 } 

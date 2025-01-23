@@ -4,6 +4,8 @@ import 'dart:convert';
 import '../util/api_utils.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/common_bottom_navigation.dart';
+
 class TagProductPage extends StatefulWidget {
   final int tagId;
   final String tagName;
@@ -171,6 +173,7 @@ class _TagProductPageState extends State<TagProductPage> {
                 );
               },
             ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: -1),
     );
   }
 } 

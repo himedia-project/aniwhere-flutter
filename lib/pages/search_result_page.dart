@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
+import '../widgets/common_bottom_navigation.dart';
 
 class SearchResultPage extends StatefulWidget {
   final String searchKeyword;
@@ -155,6 +156,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   itemCount: searchResults.length,
                   itemBuilder: (context, index) => _buildProductCard(searchResults[index]),
                 ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: -1),
     );
   }
 } 

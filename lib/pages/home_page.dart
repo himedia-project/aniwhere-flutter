@@ -12,6 +12,7 @@ import 'package:cached_network_image/cached_network_image.dart';  // 이미지 �
 import '../util/api_utils.dart';
 import '../pages/search_result_page.dart';
 import '../pages/product_detail_page.dart';
+import '../widgets/common_bottom_navigation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -373,24 +374,6 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.calendar_today),
-            onPressed: () {
-              Navigator.pushNamed(context, '/branch');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: (){
-              Navigator.pushNamed(context, '/cart');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.pushNamed(context, '/mypage');
-            },
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -448,6 +431,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: 0),
     );
   }
 }

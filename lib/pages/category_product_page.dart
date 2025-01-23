@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
+import '../widgets/common_bottom_navigation.dart';
 
 class CategoryProductPage extends StatefulWidget {
   final int categoryId;
@@ -172,6 +173,7 @@ class _CategoryProductPageState extends State<CategoryProductPage> {
                 );
               },
             ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: -1),
     );
   }
 } 

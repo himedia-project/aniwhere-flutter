@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/common_bottom_navigation.dart';
 
 class BranchPage extends StatefulWidget {
   const BranchPage({super.key});
@@ -191,6 +192,7 @@ class _BranchPageState extends State<BranchPage> {
           ],
         ),
       ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: 1),
     );
   }
 } 
