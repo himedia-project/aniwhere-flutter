@@ -148,6 +148,7 @@ class _OrderPageState extends State<OrderPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('결제하기'),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<CartItemDTO>>(
         future: cartItems,
