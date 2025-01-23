@@ -179,6 +179,7 @@ class _HomePageState extends State<HomePage> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
+            padding: const EdgeInsets.only(left: 16, right: 8),
             itemBuilder: (context, index) {
               final product = products[index];
               final String imageUrl = product['uploadFileNames'] != null && 
@@ -203,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Container(
                   width: 200,
-                  margin: const EdgeInsets.only(left: 16),
+                  margin: const EdgeInsets.only(right: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
