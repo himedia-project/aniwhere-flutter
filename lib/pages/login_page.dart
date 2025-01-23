@@ -40,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         final data = jsonDecode(response.body);
         context.read<UserProvider>().setUserData(
           email: data['email'],
+          name: data['name'],
           roles: List<String>.from(data['roles']),
           accessToken: data['accessToken'],
         );
@@ -115,6 +116,7 @@ class _LoginPageState extends State<LoginPage> {
         print('카카오 로그인 성공: $data');
         context.read<UserProvider>().setUserData(
           email: data['email'],
+          name: data['name'],
           roles: List<String>.from(data['roles']),
           accessToken: data['accessToken'],
         );
