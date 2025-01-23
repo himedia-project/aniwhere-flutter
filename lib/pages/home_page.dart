@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';  // 이미지 �
 
 import '../util/api_utils.dart';
 import '../pages/search_result_page.dart';
+import '../pages/product_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -184,81 +185,93 @@ class _HomePageState extends State<HomePage> {
                                     product['uploadFileNames'].isNotEmpty
                   ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
                   : '';
-              return Container(
-                width: 200,
-                margin: const EdgeInsets.only(left: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.grey[300]!,
-                            width: 1,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: Colors.grey[300],
-                              child: const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: Colors.grey[300],
-                              child: const Center(
-                                child: Icon(Icons.error),
-                              ),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(
+                        productId: product['id'],
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 200,
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.grey[300]!,
+                              width: 1,
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      product['name'] ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-                      style: const TextStyle(
-                        color: Color(0xFF6B8DD6),
-                        fontSize: 14,
-                      ),
-                    ),
-                    if (product['adult'] == 'Y')
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: const Text(
-                          '19금',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(Icons.error),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                  ],
+                      const SizedBox(height: 12),
+                      Text(
+                        product['name'] ?? '',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+                        style: const TextStyle(
+                          color: Color(0xFF6B8DD6),
+                          fontSize: 14,
+                        ),
+                      ),
+                      if (product['adult'] == 'Y')
+                        Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            '19금',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               );
             },
