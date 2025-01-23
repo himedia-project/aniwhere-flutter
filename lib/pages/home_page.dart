@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';  // 숫자 포맷팅을 위한 패키지 추가
 import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';    // 검색 기록 저장을 위한 패키지 추가
+import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
 
 import '../util/api_utils.dart';
 import '../pages/search_result_page.dart';
+import '../pages/product_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     'assets/banner4.jpg',
     'assets/banner5.jpg',
   ];
-  int _currentBannerIndex = 0;
+  int _currentBannerIndex = 0;    // 현재 배너 인덱스
   late PageController _pageController;
 
   @override
@@ -182,77 +185,98 @@ class _HomePageState extends State<HomePage> {
                                     product['uploadFileNames'].isNotEmpty
                   ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
                   : '';
-              return Container(
-                width: 200,
-                margin: const EdgeInsets.only(left: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: Colors.grey[300]!,
-                            width: 1,
+              return GestureDetector(
+                onTap: () async {
+                  if (product['adult'] == 'Y') {
+                    final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                    if (!isAdultVerified) return;
+                  }
+                  
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(
+                        productId: product['id'],
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 200,
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AspectRatio(
+                        aspectRatio: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.grey[300]!,
+                              width: 1,
+                            ),
                           ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
                                 color: Colors.grey[300],
                                 child: const Center(
                                   child: Icon(Icons.error),
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      product['name'] ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-                      style: const TextStyle(
-                        color: Color(0xFF6B8DD6),
-                        fontSize: 14,
-                      ),
-                    ),
-                    if (product['adult'] == 'Y')
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
+                      const SizedBox(height: 12),
+                      Text(
+                        product['name'] ?? '',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(4),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+                        style: const TextStyle(
+                          color: Color(0xFF6B8DD6),
+                          fontSize: 14,
                         ),
-                        child: const Text(
-                          '성인',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                      ),
+                      if (product['adult'] == 'Y')
+                        Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            '19금',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -264,51 +288,60 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCategories() {
     print('Building categories: $categories');
+    final List<Color> categoryColors = [
+      const Color(0xFFFF6B6B),  // 빨간색 계열 (기존 첫번째)
+      const Color(0xFFFFBE0B),  // 노란색 계열
+      const Color(0xFF4ECDC4),  // 청록색 계열 (기존 두번째)
+      const Color(0xFF845EC2),  // 보라색 계열
+      const Color(0xFF4CAF50),  // 초록색 계열
+      const Color(0xFFFF9A8B),  // 연한 핑크
+      const Color(0xFFFF7B54),  // 주황색 계열
+      const Color(0xFF00B4D8),  // 하늘색
+    ];
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Text(
-              '카테고리',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           SizedBox(
             height: 50,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8), // 좌우 여백 추가
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 final category = categories[index];
-                print('Category at index $index: $category');
+                // 색상 인덱스를 순환하여 사용
+                final colorIndex = index % categoryColors.length;
+                
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
-                        '/product',
+                        '/category_products',
                         arguments: {
                           'categoryId': category['categoryId'],
+                          'categoryName': category['name'],
                         },
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                      side: BorderSide(color: Colors.grey[300]!),
+                      backgroundColor: categoryColors[colorIndex],
+                      foregroundColor: Colors.white,  // 텍스트 색상을 흰색으로 변경
+                      elevation: 3,  // 그림자 효과 추가
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: Text(category['name'] ?? ''),
+                    child: Text(
+                      category['name'] ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,  // 텍스트를 굵게 설정
+                      ),
+                    ),
                   ),
                 );
               },
@@ -323,12 +356,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Aniwhere',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
-            fontSize: 24,
-          ),
+        automaticallyImplyLeading: false,   // 뒤로 가기 버튼을 숨김
+        title: Image.asset(
+          'assets/logo.png',
+          height: 40,
+          fit: BoxFit.contain,    // 이미지가 영역에 맞게 확대/축소
         ),
         actions: [
           IconButton(
@@ -336,25 +368,28 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: ProductSearchDelegate(),
+                delegate: ProductSearchDelegate(),    // 검색 위임자를 사용
               );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.store),
+            icon: const Icon(Icons.calendar_today),
             onPressed: () {
               Navigator.pushNamed(context, '/branch');
             },
           ),
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: (){
+              Navigator.pushNamed(context, '/cart');
+            },
           ),
           IconButton(
-              onPressed: (){
-                Navigator.pushNamed(context, '/cart');
-              }, 
-              icon: const Icon(Icons.shopping_cart))
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.pushNamed(context, '/mypage');
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -408,7 +443,7 @@ class _HomePageState extends State<HomePage> {
             _buildCategories(),
             _buildProductList('MD Pick`s 이번 주 추천!', mdPickProducts),
             _buildProductList('어른들의 세계', adultProducts),
-            _buildProductList('New 최신순!', newProducts),
+            _buildProductList('New 신작 작품들!', newProducts),
           ],
         ),
       ),
@@ -416,7 +451,46 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+/**
+ * 검색 위임자 클래스
+ */
 class ProductSearchDelegate extends SearchDelegate {
+  final List<String> _searchHistory = [];
+  static const String _searchHistoryKey = 'search_history';
+
+  ProductSearchDelegate() {
+    _loadSearchHistory();
+  }
+
+  // 검색 기록 로드
+  Future<void> _loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();    // SharedPreferences는 비동기로 초기화
+    final history = prefs.getStringList(_searchHistoryKey) ?? [];
+    _searchHistory.clear();
+    _searchHistory.addAll(history);
+  }
+
+  // 검색 기록 저장
+  Future<void> _saveSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_searchHistoryKey, _searchHistory);
+  }
+
+  // 새 검색어 추가
+  void _addSearchTerm(String term) {
+    if (term.isEmpty) return;
+    
+    // 이미 존재하는 검색어라면 제거
+    _searchHistory.remove(term);
+    // 최근 검색어를 맨 앞에 추가
+    _searchHistory.insert(0, term);
+    // 최대 10개까지만 저장
+    if (_searchHistory.length > 10) {
+      _searchHistory.removeLast();
+    }
+    _saveSearchHistory();
+  }
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -424,6 +498,7 @@ class ProductSearchDelegate extends SearchDelegate {
         icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
+          showSuggestions(context);
         },
       ),
     ];
@@ -447,13 +522,43 @@ class ProductSearchDelegate extends SearchDelegate {
       );
     }
     
+    _addSearchTerm(query); // 검색 실행 시 기록 추가
     return SearchResultPage(searchKeyword: query);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Center(
-      child: Text('검색어를 입력하세요'),
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // suggestions 리스트를 builder 내부로 이동
+        final suggestions = _searchHistory.where((term) => 
+          term.toLowerCase().contains(query.toLowerCase())
+        ).toList();
+
+        return ListView.builder(
+          itemCount: suggestions.length,
+          itemBuilder: (context, index) {
+            final suggestion = suggestions[index];
+            return ListTile(
+              leading: const Icon(Icons.history),
+              title: Text(suggestion),
+              trailing: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    _searchHistory.remove(suggestion);
+                    _saveSearchHistory();
+                  });
+                },
+              ),
+              onTap: () {
+                query = suggestion;
+                showResults(context);
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

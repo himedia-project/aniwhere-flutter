@@ -50,53 +50,86 @@ class _SearchResultPageState extends State<SearchResultPage> {
         ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
         : '';
 
-    return Container(
-      width: MediaQuery.of(context).size.width / 2 - 24,
-      margin: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Center(child: Icon(Icons.error)),
-                    );
-                  },
+    return GestureDetector(
+      onTap: () async {
+        if (product['adult'] == 'Y') {
+          final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+          if (!isAdultVerified) return;
+        }
+        
+        Navigator.pushNamed(
+          context,
+          '/product_detail',
+          arguments: {'productId': product['id']},
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2 - 24,
+        margin: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(child: Icon(Icons.error)),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            product['name'] ?? '',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+            const SizedBox(height: 8),
+            Text(
+              product['name'] ?? '',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-            style: const TextStyle(
-              color: Colors.blue,
-              fontSize: 14,
+            const SizedBox(height: 4),
+            Text(
+              '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+              style: const TextStyle(
+                color: Colors.blue,
+                fontSize: 14,
+              ),
             ),
-          ),
-        ],
+            if (product['adult'] == 'Y')
+              Container(
+                margin: const EdgeInsets.only(top: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  '19금',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -115,7 +148,7 @@ class _SearchResultPageState extends State<SearchResultPage> {
                   padding: const EdgeInsets.all(16),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 0.75,
+                    childAspectRatio: 0.65,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
                   ),

@@ -40,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         final data = jsonDecode(response.body);
         context.read<UserProvider>().setUserData(
           email: data['email'],
+          name: data['name'],
           roles: List<String>.from(data['roles']),
           accessToken: data['accessToken'],
         );
@@ -62,11 +63,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _loginWithKakao() async {
     try {
-      if (await isKakaoTalkInstalled()) {
+      if (await isKakaoTalkInstalled()) {   // 카카오톡 설치 여부 확인
         try {
-          await UserApi.instance.loginWithKakaoTalk();
+          await UserApi.instance.loginWithKakaoTalk();    // 카카오톡으로 로그인
           print('카카오톡으로 로그인 성공');
-          _processKakaoLogin();
+          _processKakaoLogin();              // 카카오 로그인 처리
         } catch (error) {
           print('카카오톡으로 로그인 실패 $error');
 
@@ -100,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _processKakaoLogin() async {
     try {
-      User user = await UserApi.instance.me();
+      User user = await UserApi.instance.me();          // 카카오 사용자 정보 가져오기
       print('카카오 사용자 정보: ${user.toString()}');
       // 서버에 카카오 로그인 정보를 전송하고 JWT 토큰을 받아옴
       final response = await http.post(
@@ -116,6 +117,7 @@ class _LoginPageState extends State<LoginPage> {
         print('카카오 로그인 성공: $data');
         context.read<UserProvider>().setUserData(
           email: data['email'],
+          name: data['name'],
           roles: List<String>.from(data['roles']),
           accessToken: data['accessToken'],
         );

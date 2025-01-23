@@ -11,7 +11,11 @@ import 'package:provider/provider.dart';
 import 'package:aniwhere_flutter/pages/search_result_page.dart';
 import 'package:aniwhere_flutter/pages/orderhist_page.dart';
 import 'package:aniwhere_flutter/pages/join_page.dart';
-import 'package:aniwhere_flutter/providers/order_provider.dart'; // OrderProvider import
+import 'package:aniwhere_flutter/pages/category_product_page.dart';
+import 'package:aniwhere_flutter/pages/splash_screen.dart';
+import 'package:aniwhere_flutter/pages/product_detail_page.dart';
+import 'package:aniwhere_flutter/pages/tag_product_page.dart';
+import 'package:aniwhere_flutter/providers/order_provider.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
@@ -38,13 +42,15 @@ Future<void> printKeyHash() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Aniwhere App',
-      initialRoute: "/login",
+      initialRoute: "/",
       routes: {
+        "/": (context) => const SplashScreen()
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
         "/join": (context) => const JoinPage(),
@@ -55,7 +61,28 @@ class MyApp extends StatelessWidget {
         "/cart": (context) => const CartPage(),
         "/order": (context) => const OrderPage(),
         "/orderHist": (context) => const OrderHistPage(),
+        "/category_products": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return CategoryProductPage(
+            categoryId: args['categoryId'],
+            categoryName: args['categoryName'],
+          );
+        },
+        "/mypage": (context) => const MyPage(),
+        "/product_detail": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return ProductDetailPage(productId: args['productId']);
+        },
+        "/tag_products": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return TagProductPage(
+            tagId: args['tagId'],
+            tagName: args['tagName'],
+          );
+        },
       },
     );
   }
 }
+
+

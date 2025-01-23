@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class UserProvider with ChangeNotifier {
   String? email;
+  String? name;
   List<String> roles = [];
   String? accessToken;
   String? refreshToken;
@@ -9,10 +10,12 @@ class UserProvider with ChangeNotifier {
   // 사용자 데이터 설정
   void setUserData({
     required String email,
+    required String name,
     required List<String> roles,
     required String accessToken,
   }) {
     this.email = email;
+    this.name = name;
     this.roles = roles;
     this.accessToken = accessToken;
     notifyListeners();
@@ -21,6 +24,7 @@ class UserProvider with ChangeNotifier {
   // 사용자 데이터 초기화
   void clearUserData() {
     email = null;
+    name = null;
     roles = [];
     accessToken = null;
     notifyListeners();

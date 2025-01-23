@@ -33,8 +33,25 @@ class _JoinPageState extends State<JoinPage> {
       );
 
       if (response.statusCode == 200) {
-        // 회원가입 성공 시 로그인 페이지로 이동
-        Navigator.pushReplacementNamed(context, '/login');
+        // 회원가입 성공 시 다이얼로그 표시
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('알림'),
+              content: const Text('회원가입을 축하드립니다!'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // 다이얼로그 닫기
+                    Navigator.pushReplacementNamed(context, '/login'); // 로그인 페이지로 이동
+                  },
+                  child: const Text('확인'),
+                ),
+              ],
+            );
+          },
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('회원가입에 실패했습니다.')),
