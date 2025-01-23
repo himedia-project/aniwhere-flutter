@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import '../providers/order_provider.dart'; // OrderProvider 임포트
 import '../util/api_utils.dart';
-import 'cart_page.dart'; // CartItem 클래스가 정의된 파일로 수정
+import 'cart_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class UserInfo {
   final String name;
@@ -38,7 +39,10 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final args = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as Map;
     cartItems = args['cartItems'];
   }
 
@@ -54,7 +58,6 @@ class _OrderPageState extends State<OrderPage> {
       final orderData = {
         "cartItems": cartItemsList.map((item) => {
           "productId": item.productId,
-          // 필요한 경우 수량 추가
         }).toList(),
       };
 
@@ -70,26 +73,61 @@ class _OrderPageState extends State<OrderPage> {
 
       if (response.statusCode == 200) {
         // 주문이 성공적으로 처리된 경우
-        final responseBody = json.decode(response.body);
-        final orderId = responseBody['orderId']; // JSON에서 orderId를 가져옵니다.
-        orderProvider.addOrder(Order(
-          email: userInfo['email'] ?? '',
-          paymentMethod: selectedPaymentMethod!,
-          items: cartItemsList,
-          totalPrice: 0, // 총 가격은 나중에 계산
-        ));
+        try {
+          final responseBody = response.body;
+          print('Response body: $responseBody'); // 응답 본문 출력
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('주문이 완료되었습니다. 주문 ID: $orderId')),
-        );
+          String orderId;
+
+          // 응답 본문이 JSON 형식인지 확인
+          if (responseBody.startsWith('{')) {
+            final parsedResponse = json.decode(responseBody);
+            orderId = parsedResponse['orderId'];
+          } else {
+            // 단순 텍스트 형식 처리
+            orderId = responseBody.split(':').last.trim();
+          }
+
+          orderProvider.addOrder(Order(
+            email: userInfo['email'] ?? '',
+            paymentMethod: selectedPaymentMethod!,
+            items: cartItemsList,
+            totalPrice: 0, // 총 가격은 나중에 계산
+          ));
+
+          // 디버그: 주문이 성공적으로 처리되었음을 확인
+          print('Order placed successfully, Order ID: $orderId');
+
+          // 알림 대화상자 표시
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('주문 완료'),
+              content: Text('결제가 완료되었습니다.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // 대화상자 닫기
+                    Navigator.of(context).pushReplacementNamed('/home'); // 홈페이지로 이동
+                  },
+                  child: Text('돌아가기'),
+                ),
+              ],
+            ),
+          );
+        } catch (e) {
+          print('Error parsing response body: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('주문 처리 중 오류가 발생했습니다.')),
+          );
+        }
       } else {
         // 오류 처리
-        print('Error: ${response.statusCode} - ${response.body}'); // 응답 코드와 본문 출력
+        print('Error: ${response.statusCode} - ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('주문 처리 중 오류가 발생했습니다.')),
         );
       }
-
     } else {
       // 결제 수단 선택 안 함
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,8 +138,12 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final accessToken = context.read<UserProvider>().getAccessToken;
-    final userInfo = context.read<UserProvider>().getUserInfo; // 사용자 정보 가져오기
+    final accessToken = context
+        .read<UserProvider>()
+        .getAccessToken;
+    final userInfo = context
+        .read<UserProvider>()
+        .getUserInfo;
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +160,8 @@ class _OrderPageState extends State<OrderPage> {
             return Center(child: Text('장바구니가 비어 있습니다.'));
           } else {
             final items = snapshot.data!;
-            int totalPrice = items.fold(0, (sum, item) => sum + item.price) + 3000; // 배송비 3000원 추가
+            int totalPrice = items.fold(0, (sum, item) => sum + item.price) +
+                3000;
 
             return Column(
               children: [
@@ -129,13 +172,16 @@ class _OrderPageState extends State<OrderPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // 사용자 정보
-                        Text('주문자 정보', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        Text('주문자 정보', style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
                         SizedBox(height: 8),
-                        Text('이메일: ${userInfo['email']}'), // 사용자 이메일
+                        Text('이름: ${userInfo['name']}'),
+                        Text('이메일: ${userInfo['email']}'),
                         SizedBox(height: 16),
 
                         // 주문 상품 정보
-                        Text('주문 상품 정보', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        Text('주문 상품 정보', style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
                         SizedBox(height: 8),
                         ListView.builder(
                           shrinkWrap: true,
@@ -144,6 +190,28 @@ class _OrderPageState extends State<OrderPage> {
                           itemBuilder: (context, index) {
                             final item = items[index];
                             return ListTile(
+                              leading: Container(
+                                width: 50, // 고정된 너비 설정
+                                height: 50, // 고정된 높이 설정
+                                child: CachedNetworkImage(
+                                  imageUrl: item.getImageUrl(), // 이미지 URL 가져오기
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      Container(
+                                        color: Colors.grey[300],
+                                        child: const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        color: Colors.grey[300],
+                                        child: const Center(
+                                          child: Icon(Icons.error),
+                                        ),
+                                      ),
+                                ),
+                              ),
                               title: Text(item.productName),
                               subtitle: Text('${item.price} 원'),
                             );
@@ -152,13 +220,15 @@ class _OrderPageState extends State<OrderPage> {
                         SizedBox(height: 16),
 
                         // 주문 요약
-                        Text('주문 요약', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        Text('주문 요약', style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
                         SizedBox(height: 8),
                         Text('총 주문금액: $totalPrice 원'),
                         SizedBox(height: 16),
 
                         // 결제 수단
-                        Text('결제수단', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        Text('결제수단', style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

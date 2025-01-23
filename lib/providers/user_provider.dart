@@ -53,6 +53,7 @@ class UserProvider with ChangeNotifier {
   // 사용자 정보 가져오기
   Map<String, String?> get getUserInfo => {
     'email': email,
+    'name': name,
   };
 
 }
