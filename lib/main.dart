@@ -15,6 +15,7 @@ import 'package:aniwhere_flutter/pages/join_page.dart';
 import 'package:aniwhere_flutter/pages/category_product_page.dart';
 import 'package:aniwhere_flutter/pages/splash_screen.dart';
 import 'package:aniwhere_flutter/pages/product_detail_page.dart';
+import 'package:aniwhere_flutter/pages/tag_product_page.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
@@ -68,6 +69,13 @@ class MyApp extends StatelessWidget {
         "/product_detail": (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return ProductDetailPage(productId: args['productId']);
+        },
+        "/tag_products": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return TagProductPage(
+            tagId: args['tagId'],
+            tagName: args['tagName'],
+          );
         },
       },
     );

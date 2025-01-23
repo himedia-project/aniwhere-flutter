@@ -139,21 +139,33 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     spacing: 8,
                     runSpacing: 8,
                     children: tags.map((tag) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF5F5F5),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          '#${tag['name']}',
-                          style: const TextStyle(
-                            color: Color(0xFF6B8DD6),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/tag_products',
+                            arguments: {
+                              'tagId': tag['id'],
+                              'tagName': tag['name'],
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF5F5F5),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            '#${tag['name']}',
+                            style: const TextStyle(
+                              color: Color(0xFF6B8DD6),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       );
