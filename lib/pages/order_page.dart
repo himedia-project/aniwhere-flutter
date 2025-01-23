@@ -9,19 +9,16 @@ import 'cart_page.dart'; // CartItem 클래스가 정의된 파일로 수정
 
 class UserInfo {
   final String name;
-  final String phone;
   final String email;
 
   UserInfo({
     required this.name,
-    required this.phone,
     required this.email,
   });
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     return UserInfo(
       name: json['name'],
-      phone: json['phone'],
       email: json['email'],
     );
   }

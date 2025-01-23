@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import 'package:aniwhere_flutter/util/api_utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
 
 class CartItemDTO {
   final int cartItemId;
@@ -29,14 +30,20 @@ class CartItemDTO {
       imageName: json['imageName'],
     );
   }
-  Map<String, dynamic> toJson(){
+
+  Map<String, dynamic> toJson() {
     return {
-      "cartItemId":cartItemId,
-      "productId":productId,
-      "productName":productName,
-      "price":price,
-      "imageName":imageName
+      "cartItemId": cartItemId,
+      "productId": productId,
+      "productName": productName,
+      "price": price,
+      "imageName": imageName,
     };
+  }
+
+  // 이미지 URL을 반환하는 메서드 추가
+  String getImageUrl() {
+    return '${ApiUtils.baseUrl}/product/view/$imageName'; // API URL과 이미지 파일 이름을 결합
   }
 }
 
@@ -133,9 +140,28 @@ class _CartPageState extends State<CartPage> {
               itemBuilder: (context, index) {
                 final item = cartItems[index];
                 return ListTile(
+                  leading: Container(
+                    width: 50, // 고정된 너비 설정
+                    height: 50, // 고정된 높이 설정
+                    child: CachedNetworkImage(
+                      imageUrl: item.getImageUrl(), // 이미지 URL 가져오기
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                  ),
                   title: Text(item.productName),
                   subtitle: Text('${item.price} 원'),
-                  // leading: Image.network(item.imageName),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () async {
@@ -146,6 +172,7 @@ class _CartPageState extends State<CartPage> {
                     },
                   ),
                 );
+
               },
             );
           }
@@ -159,22 +186,8 @@ class _CartPageState extends State<CartPage> {
             'cartItems': futureCartItems,
           });
         },
-        child: Text('주문페이지')
+        child: Text('주문페이지'),
       ),
-
-
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     // 예시로 추가할 상품 ID를 설정합니다.
-      //     int productIdToAdd = 1; // 실제 상품 ID로 변경하세요.
-      //     await addCartItem(accessToken!, productIdToAdd);
-      //     setState(() {
-      //       futureCartItems = getCartItems(accessToken!);
-      //     });
-      //   },
-      //   child: Icon(Icons.add),
-      //   tooltip: '장바구니에 추가',
-      // ),
     );
   }
 }
