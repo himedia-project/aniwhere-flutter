@@ -29,6 +29,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     try {
       final response = await http.get(
         Uri.parse('${ApiUtils.baseUrl}/product/${widget.productId}/detail'),
+        headers: ApiUtils.getAuthHeaders(context),
       );
 
       if (response.statusCode == 200) {
