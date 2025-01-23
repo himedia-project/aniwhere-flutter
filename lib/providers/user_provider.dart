@@ -4,7 +4,9 @@ class UserProvider with ChangeNotifier {
   String? email;
   List<String> roles = [];
   String? accessToken;
+  String? refreshToken;
 
+  // 사용자 데이터 설정
   void setUserData({
     required String email,
     required List<String> roles,
@@ -16,6 +18,7 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // 사용자 데이터 초기화
   void clearUserData() {
     email = null;
     roles = [];
@@ -23,5 +26,29 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // 로그인 상태 확인
   bool get isLoggedIn => accessToken != null;
-} 
+
+  // 액세스 토큰 가져오기
+  String? get getAccessToken => accessToken;
+
+  // 리프레시 토큰 가져오기
+  String? get getRefreshToken => refreshToken; // 리프레시 토큰 가져오는 메서드 추가
+
+  void setAccessToken(String? token){
+    accessToken = token;
+    notifyListeners();
+  }
+
+  // 리프레시 토큰 설정
+  void setRefreshToken(String? token) {
+    refreshToken = token; // 리프레시 토큰 설정
+    notifyListeners();
+  }
+
+  // 사용자 정보 가져오기
+  Map<String, String?> get getUserInfo => {
+    'email': email,
+  };
+
+}

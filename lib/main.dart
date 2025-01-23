@@ -11,14 +11,18 @@ import 'package:provider/provider.dart';
 import 'package:aniwhere_flutter/pages/search_result_page.dart';
 import 'package:aniwhere_flutter/pages/orderhist_page.dart';
 import 'package:aniwhere_flutter/pages/join_page.dart';
+import 'package:aniwhere_flutter/providers/order_provider.dart'; // OrderProvider import
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
   runApp(
-      ChangeNotifierProvider(     // ChangeNotifierProvider란?
-        create: (_) => UserProvider(),
-        child: const MyApp(),
-      ),
+    MultiProvider( // MultiProvider로 변경
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()), // OrderProvider 추가
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -34,7 +38,6 @@ Future<void> printKeyHash() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,10 +54,8 @@ class MyApp extends StatelessWidget {
         "/tag": (context) => const ProductPage(),
         "/cart": (context) => const CartPage(),
         "/order": (context) => const OrderPage(),
-        "/order_history": (context) => const OrderhistPage(),
+        "/orderHist": (context) => const OrderHistPage(),
       },
     );
   }
 }
-
-
