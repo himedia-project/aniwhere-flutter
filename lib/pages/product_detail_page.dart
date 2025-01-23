@@ -58,6 +58,69 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
   }
 
+  Future<void> addToCart() async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiUtils.baseUrl}/cart/add'),
+        headers: ApiUtils.getAuthHeaders(context),
+        body: jsonEncode({
+          'productId': widget.productId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('장바구니에 추가되었습니다')),
+        );
+        Navigator.pushNamed(context, '/cart');
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('장바구니 추가에 실패했습니다')),
+        );
+      }
+    } catch (e) {
+      print('Error adding to cart: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('장바구니 추가 중 오류가 발생했습니다')),
+      );
+    }
+  }
+
+  Future<void> directOrder() async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiUtils.baseUrl}/order'),
+        headers: ApiUtils.getAuthHeaders(context),
+        body: jsonEncode({
+          'cartItems': [
+            {
+              'productId': widget.productId,
+            }
+          ],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (!mounted) return;
+        Navigator.pushNamed(context, '/order');
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('주문에 실패했습니다')),
+        );
+      }
+    } catch (e) {
+      print('Error creating order: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('주문 중 오류가 발생했습니다')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (productDetail == null) {
@@ -257,12 +320,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO: 장바구니 추가 로직 구현
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('장바구니에 추가되었습니다')),
-                  );
-                },
+                onPressed: addToCart,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: const Color(0xFF6B8DD6),
@@ -275,9 +333,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO: 구매하기 로직 구현
-                },
+                onPressed: directOrder,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6B8DD6),
                   foregroundColor: Colors.white,
