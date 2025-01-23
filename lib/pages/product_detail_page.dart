@@ -227,6 +227,55 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ],
         ),
       ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  // TODO: 장바구니 추가 로직 구현
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('장바구니에 추가되었습니다')),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF6B8DD6),
+                  side: const BorderSide(color: Color(0xFF6B8DD6)),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Text('장바구니'),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  // TODO: 구매하기 로직 구현
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6B8DD6),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Text('구매하기'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 } 
