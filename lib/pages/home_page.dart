@@ -361,7 +361,7 @@ class _HomePageState extends State<HomePage> {
         automaticallyImplyLeading: false,   // 뒤로 가기 버튼을 숨김
         title: Image.asset(
           'assets/logo.png',
-          height: 40,
+          height: 45,
           fit: BoxFit.contain,    // 이미지가 영역에 맞게 확대/축소
         ),
         actions: [
