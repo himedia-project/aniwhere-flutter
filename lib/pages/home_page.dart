@@ -358,15 +358,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,   // 뒤로 가기 버튼을 숨김
-        title: Image.asset(
-          'assets/logo.png',
-          height: 45,
-          fit: BoxFit.contain,    // 이미지가 영역에 맞게 확대/축소
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,  // 타이틀의 기본 패딩 제거
+        title: Padding(
+          padding: const EdgeInsets.only(left: 8),  // 왼쪽에 약간의 여백만 추가
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Image.asset(
+              'assets/logo.png',
+              height: 45,
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.search, size: 30),  // 아이콘 크기를 30으로 증가
             onPressed: () {
               showSearch(
                 context: context,
