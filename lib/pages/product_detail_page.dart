@@ -39,6 +39,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         setState(() {
           productDetail = jsonDecode(utf8.decode(response.bodyBytes));
         });
+
       }
     } catch (e) {
       print('Error fetching product detail: $e');

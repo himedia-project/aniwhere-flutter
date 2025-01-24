@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:aniwhere_flutter/pages/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -173,7 +174,17 @@ class _CartPageState extends State<CartPage> {
                       });
                     },
                   ),
+                  onTap: () {
+                    // 상품 디테일 페이지로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductDetailPage(productId: item.productId), // 상품 ID를 전달
+                      ),
+                    );
+                  },
                 );
+
 
               },
             );
