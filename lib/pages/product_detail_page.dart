@@ -93,36 +93,22 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Future<void> directOrder() async {
-    try {
-      final response = await http.post(
-        Uri.parse('${ApiUtils.baseUrl}/order'),
-        headers: ApiUtils.getAuthHeaders(context),
-        body: jsonEncode({
-          'cartItems': [
-            {
-              'productId': widget.productId,
-            }
-          ],
-        }),
-      );
+    final cartItem = {
+      'productId': widget.productId,
+      'name': productDetail!['name'],
+      'price': productDetail!['price'],
+      'imageName': productDetail!['uploadFileNames'] != null &&
+          productDetail!['uploadFileNames'].isNotEmpty
+          ? productDetail!['uploadFileNames'][0]
+          : '', // 이미지 이름 추가
+    };
 
-      if (response.statusCode == 200) {
-        if (!mounted) return;
-        Navigator.pushNamed(context, '/order');
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('주문에 실패했습니다')),
-        );
-      }
-    } catch (e) {
-      print('Error creating order: $e');
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('주문 중 오류가 발생했습니다')),
-      );
-    }
+    Navigator.pushNamed(context, '/order', arguments: {
+      'product': cartItem,
+    });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

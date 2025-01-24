@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import 'package:aniwhere_flutter/util/api_utils.dart';
-import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
+import 'package:cached_network_image/cached_network_image.dart';
+
+import '../widgets/common_bottom_navigation.dart';  // 이미지 캐싱을 위한 패키지 추가
 
 class CartItemDTO {
   final int cartItemId;
