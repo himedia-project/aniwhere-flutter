@@ -140,7 +140,16 @@ class _CartPageState extends State<CartPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('오류: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('장바구니가 비어 있습니다.'));
+            return Center(
+              child: Text(
+                '장바구니가 비어 있습니다.',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
+              ),
+            );
           } else {
             final cartItems = snapshot.data!;
             return ListView.builder(
@@ -196,15 +205,15 @@ class _CartPageState extends State<CartPage> {
       ),
       bottomNavigationBar: const CommonBottomNavigation(currentIndex: 2),
       floatingActionButton: Container(
-        width: MediaQuery.of(context).size.width * 0.9, // 화면 너비의 90%
-        padding: const EdgeInsets.only(bottom: 16.0), // 하단 패딩
+        width: MediaQuery.of(context).size.width * 0.9,
+        padding: const EdgeInsets.only(bottom: 16.0),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue[100],
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 15.0), // 버튼 높이 조절
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
             textStyle: const TextStyle(fontSize: 20),
           ),
           onPressed: () async {
@@ -212,13 +221,17 @@ class _CartPageState extends State<CartPage> {
               'cartItems': futureCartItems,
             });
           },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.shopping_cart, size: 24),
-              SizedBox(width: 10),
-              Text('장바구니 목록 주문하기'),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,  // Row의 크기를 내용물에 맞게 조정
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(Icons.shopping_cart, size: 24),
+                SizedBox(width: 10),
+                Text('장바구니 목록 주문하기'),
+              ],
+            ),
           ),
         ),
       ),
