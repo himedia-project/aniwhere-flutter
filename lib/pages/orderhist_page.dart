@@ -196,6 +196,7 @@ class _OrderHistPageState extends State<OrderHistPage> {
                             title: Text('주문 상품 목록'),
                             content: SingleChildScrollView(
                               child: Column(
+                                spacing: 15,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: order.orderItems.isNotEmpty
                                     ? order.orderItems.map((item) {
