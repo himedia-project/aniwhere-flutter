@@ -74,6 +74,11 @@ class _JoinPageState extends State<JoinPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                'assets/logo.png',
+                height: 90,
+              ),
+              const SizedBox(height: 40),
               TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
