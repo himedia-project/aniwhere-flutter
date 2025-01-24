@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
 import 'package:aniwhere_flutter/util/api_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
+import '../widgets/common_bottom_navigation.dart';  // Import 추가
 
 class CartItemDTO {
   final int cartItemId;
@@ -178,7 +179,7 @@ class _CartPageState extends State<CartPage> {
           }
         },
       ),
-
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: 2),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // 주문하기 버튼 클릭 시 OrderPage로 이동
