@@ -10,8 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';    // 검색 기록
 import 'package:cached_network_image/cached_network_image.dart';  // 이미지 캐싱을 위한 패키지 추가
 
 import '../util/api_utils.dart';
-import '../pages/search_result_page.dart';
 import '../pages/product_detail_page.dart';
+import '../widgets/common_bottom_navigation.dart';
+import '../pages/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -179,6 +180,7 @@ class _HomePageState extends State<HomePage> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
+            padding: const EdgeInsets.only(left: 16, right: 8),
             itemBuilder: (context, index) {
               final product = products[index];
               final String imageUrl = product['uploadFileNames'] != null && 
@@ -203,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Container(
                   width: 200,
-                  margin: const EdgeInsets.only(left: 16),
+                  margin: const EdgeInsets.only(right: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -372,24 +374,6 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.calendar_today),
-            onPressed: () {
-              Navigator.pushNamed(context, '/branch');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: (){
-              Navigator.pushNamed(context, '/cart');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.pushNamed(context, '/mypage');
-            },
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -447,6 +431,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: 0),
     );
   }
 }
@@ -523,7 +508,11 @@ class ProductSearchDelegate extends SearchDelegate {
     }
     
     _addSearchTerm(query); // 검색 실행 시 기록 추가
-    return SearchResultPage(searchKeyword: query);
+    return ProductListPage(
+      title: '검색 결과: $query',
+      apiPath: '/product/list',
+      queryParams: {'searchKeyword': query},
+    );
   }
 
   @override

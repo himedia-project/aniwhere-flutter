@@ -5,6 +5,8 @@ import '../util/api_utils.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../widgets/common_bottom_navigation.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
 
@@ -261,6 +263,7 @@ class _MyPageState extends State<MyPage> {
           ],
         ),
       ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: 3),
     );
   }
 } 

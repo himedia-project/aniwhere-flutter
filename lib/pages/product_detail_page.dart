@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../widgets/common_bottom_navigation.dart';
+
+import 'home_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final int productId;
@@ -136,7 +139,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(productDetail!['name']),
+        automaticallyImplyLeading: false,
+        title: Image.asset(
+          'assets/logo.png',
+          height: 40,
+          fit: BoxFit.contain,
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: ProductSearchDelegate(),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -165,11 +184,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        productDetail!['name'],
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          productDetail!['name'],
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       if (productDetail!['adult'] == 'Y')
@@ -248,9 +269,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.category_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '카테고리: ${productDetail!['categoryName']}',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '카테고리: ${productDetail!['categoryName']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -259,9 +282,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.business_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '제작사: ${productDetail!['manufacturer']}',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '제작사: ${productDetail!['manufacturer']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -270,9 +295,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.video_library_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '총 화수: ${productDetail!['totalEpisode']}화',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '총 화수: ${productDetail!['totalEpisode']}화',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -281,9 +308,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     children: [
                       const Icon(Icons.calendar_today_outlined, size: 20, color: Color(0xFF6B8DD6)),
                       const SizedBox(width: 8),
-                      Text(
-                        '방영일: ${productDetail!['releaseDate']}',
-                        style: const TextStyle(fontSize: 15),
+                      Expanded(
+                        child: Text(
+                          '방영일: ${productDetail!['releaseDate']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
@@ -297,54 +326,51 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(productDetail!['story'] ?? ''),
+                  const SizedBox(height: 32),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 96),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: addToCart,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF6B8DD6),
+                              side: const BorderSide(color: Color(0xFF6B8DD6)),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: const Text(
+                              '장바구니',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: directOrder,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF6B8DD6),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: const Text(
+                              '구매하기',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: addToCart,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF6B8DD6),
-                  side: const BorderSide(color: Color(0xFF6B8DD6)),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text('장바구니'),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: directOrder,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6B8DD6),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text('구매하기'),
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: -1),
     );
   }
 } 

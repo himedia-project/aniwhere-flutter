@@ -145,12 +145,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Ani-where',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+              Image.asset(
+                'assets/logo.png',
+                height: 60,
               ),
               const SizedBox(height: 40),
               TextField(

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/common_bottom_navigation.dart';
 
 class BranchPage extends StatefulWidget {
   const BranchPage({super.key});
@@ -58,8 +59,8 @@ class _BranchPageState extends State<BranchPage> {
           padding: const EdgeInsets.all(16.0),
           child: Text(
             '$year년 작품',
-            style: GoogleFonts.poppins(
-              fontSize: 20,
+            style: const TextStyle(
+              fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -69,12 +70,13 @@ class _BranchPageState extends State<BranchPage> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
+            padding: const EdgeInsets.only(left: 16, right: 8),
             itemBuilder: (context, index) {
               final product = products[index];
               final String imageUrl = product['uploadFileNames'] != null && 
                                     product['uploadFileNames'].isNotEmpty
-                  ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
-                  : '';
+                    ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
+                    : '';
               return GestureDetector(
                 onTap: () async {
                   if (product['adult'] == 'Y') {
@@ -90,7 +92,7 @@ class _BranchPageState extends State<BranchPage> {
                 },
                 child: Container(
                   width: 200,
-                  margin: const EdgeInsets.only(left: 16),
+                  margin: const EdgeInsets.only(right: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -126,7 +128,7 @@ class _BranchPageState extends State<BranchPage> {
                         product['name'] ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 18,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -135,7 +137,7 @@ class _BranchPageState extends State<BranchPage> {
                       Text(
                         '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
                         style: const TextStyle(
-                          color: Colors.blue,
+                          color: Color(0xFF6B8DD6),
                           fontSize: 14,
                         ),
                       ),
@@ -191,6 +193,7 @@ class _BranchPageState extends State<BranchPage> {
           ],
         ),
       ),
+      bottomNavigationBar: const CommonBottomNavigation(currentIndex: 1),
     );
   }
 } 

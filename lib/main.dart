@@ -9,14 +9,12 @@ import 'package:aniwhere_flutter/pages/order_page.dart';
 import 'package:aniwhere_flutter/pages/cart_page.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
-import 'package:aniwhere_flutter/pages/search_result_page.dart';
 import 'package:aniwhere_flutter/pages/orderhist_page.dart';
 import 'package:aniwhere_flutter/pages/join_page.dart';
-import 'package:aniwhere_flutter/pages/category_product_page.dart';
 import 'package:aniwhere_flutter/pages/splash_screen.dart';
 import 'package:aniwhere_flutter/pages/product_detail_page.dart';
-import 'package:aniwhere_flutter/pages/tag_product_page.dart';
 import 'package:aniwhere_flutter/providers/order_provider.dart';
+import 'package:aniwhere_flutter/pages/product_list_page.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
@@ -55,18 +53,25 @@ class MyApp extends StatelessWidget {
         "/home": (context) => const HomePage(),
         "/login": (context) => const LoginPage(),
         "/join": (context) => const JoinPage(),
-        "/search": (context) => const SearchResultPage(searchKeyword: ''),
+        "/search": (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+          final searchKeyword = args?['searchKeyword'] ?? '';
+          return ProductListPage(
+            title: '검색 결과: $searchKeyword',
+            apiPath: '/product/list',
+            queryParams: {'searchKeyword': searchKeyword},
+          );
+        },
         "/branch": (context) => const BranchPage(),
-        "/product": (context) => const ProductPage(),
-        "/tag": (context) => const ProductPage(),
         "/cart": (context) => const CartPage(),
         "/order": (context) => const OrderPage(),
         "/orderHist": (context) => const OrderHistPage(),
         "/category_products": (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-          return CategoryProductPage(
-            categoryId: args['categoryId'],
-            categoryName: args['categoryName'],
+          return ProductListPage(
+            title: args['categoryName'],
+            apiPath: '/product/list',
+            queryParams: {'categoryId': args['categoryId'].toString()},
           );
         },
         "/mypage": (context) => const MyPage(),
@@ -76,9 +81,9 @@ class MyApp extends StatelessWidget {
         },
         "/tag_products": (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-          return TagProductPage(
-            tagId: args['tagId'],
-            tagName: args['tagName'],
+          return ProductListPage(
+            title: '#${args['tagName']}',
+            apiPath: '/tag/${args['tagId']}/product/list',
           );
         },
       },
