@@ -278,13 +278,29 @@ class _OrderPageState extends State<OrderPage> {
                 ),
 
                 // 주문 완료 버튼
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9, // 화면 너비의 90%
+                  padding: const EdgeInsets.all(16.0), // 패딩 추가
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[100],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 15.0), // 버튼 높이 조절
+                      textStyle: const TextStyle(fontSize: 20),
+                    ),
                     onPressed: () async {
                       await placeOrder(accessToken!);
                     },
-                    child: Text('주문 완료'),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.payment, size: 24),
+                        SizedBox(width: 10),
+                        Text('주문 완료'),
+                      ],
+                    ),
                   ),
                 ),
               ],
