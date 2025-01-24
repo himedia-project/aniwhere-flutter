@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset(
               'assets/logo.png', // 로고 이미지 경로를 실제 프로젝트의 이미지 경로로 수정해주세요
-              width: 200,
+              width: 350,
               height: 200,
             ),
             const SizedBox(height: 20),

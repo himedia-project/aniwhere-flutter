@@ -15,9 +15,12 @@ class BranchPage extends StatefulWidget {
 
 class _BranchPageState extends State<BranchPage> {
   Map<String, List<dynamic>> yearProducts = {
-    '1999': [],
-    '2001': [],
-    '2002': [],
+    '2020': [],
+    '2021': [],
+    '2022': [],
+    '2023': [],
+    '2024': [],
+    '2025': [],
   };
 
   @override
@@ -28,9 +31,12 @@ class _BranchPageState extends State<BranchPage> {
 
   Future<void> fetchAllYearProducts() async {
     await Future.wait([
-      fetchProductsByYear('1999'),
-      fetchProductsByYear('2001'),
-      fetchProductsByYear('2002'),
+      fetchProductsByYear('2020'),
+      fetchProductsByYear('2021'),
+      fetchProductsByYear('2022'),
+      fetchProductsByYear('2023'),
+      fetchProductsByYear('2024'),
+      fetchProductsByYear('2025'),
     ]);
   }
 
@@ -187,9 +193,12 @@ class _BranchPageState extends State<BranchPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildProductList('1999', yearProducts['1999']!),
-            _buildProductList('2001', yearProducts['2001']!),
-            _buildProductList('2002', yearProducts['2002']!),
+            _buildProductList('2020', yearProducts['2020']!),
+            _buildProductList('2021', yearProducts['2021']!),
+            _buildProductList('2022', yearProducts['2022']!),
+            _buildProductList('2023', yearProducts['2023']!),
+            _buildProductList('2024', yearProducts['2024']!),
+            _buildProductList('2025', yearProducts['2025']!),
           ],
         ),
       ),
