@@ -196,6 +196,7 @@ class _OrderHistPageState extends State<OrderHistPage> {
                             title: Text('주문 상품 목록'),
                             content: SingleChildScrollView(
                               child: Column(
+                                spacing: 15,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: order.orderItems.isNotEmpty
                                     ? order.orderItems.map((item) {
@@ -225,13 +226,20 @@ class _OrderHistPageState extends State<OrderHistPage> {
                             actions: [
                               if (order.orderStatus == 'ORDER') // 주문 상태가 ORDER인 경우만 버튼 표시
                                 TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                                  ),
+
                                   onPressed: () {
                                     final accessToken = context.read<UserProvider>().getAccessToken;
                                     if (accessToken != null) {
                                       cancelOrder(order.orderId, accessToken);
                                     }
                                   },
-                                  child: Text('주문 취소'),
+                                  child: Text('주문 취소',
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),),
                                 ),
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(),
