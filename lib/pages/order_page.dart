@@ -39,12 +39,30 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final args = ModalRoute
-        .of(context)!
-        .settings
-        .arguments as Map;
-    cartItems = args['cartItems'];
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+
+    if (args['cartItems'] is Future<List<CartItemDTO>>) {
+      // cartItems가 Future<List<CartItemDTO>>일 경우
+      cartItems = args['cartItems'];
+    } else if (args['product'] != null) {
+      // 단일 제품 정보가 전달된 경우
+      final product = args['product'] as Map<String, dynamic>;
+      cartItems = Future.value([
+        CartItemDTO(
+          cartItemId: 0, // 새로운 카트 아이템이므로 ID는 0 또는 적절한 값으로 초기화
+          productId: product['productId'],
+          productName: product['name'],
+          price: product['price'],
+          imageName: product['imageName'] ?? '', // 이미지 이름이 없을 경우 빈 문자열 처리
+        ),
+      ]);
+    } else {
+      // 기본값 설정 (예: 비어 있는 리스트)
+      cartItems = Future.value([]);
+    }
   }
+
+
 
   Future<void> placeOrder(String accessToken) async {
     final userInfo = context.read<UserProvider>().getUserInfo;
@@ -138,16 +156,13 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final accessToken = context
-        .read<UserProvider>()
-        .getAccessToken;
-    final userInfo = context
-        .read<UserProvider>()
-        .getUserInfo;
+    final accessToken = context.read<UserProvider>().getAccessToken;
+    final userInfo = context.read<UserProvider>().getUserInfo;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('결제하기'),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<List<CartItemDTO>>(
         future: cartItems,
@@ -160,8 +175,7 @@ class _OrderPageState extends State<OrderPage> {
             return Center(child: Text('장바구니가 비어 있습니다.'));
           } else {
             final items = snapshot.data!;
-            int totalPrice = items.fold(0, (sum, item) => sum + item.price) +
-                3000;
+            int totalPrice = items.fold(0, (sum, item) => sum + item.price);
 
             return Column(
               children: [
