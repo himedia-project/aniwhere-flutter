@@ -26,7 +26,7 @@ class CommonBottomNavigation extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_today),
-          label: '지점',
+          label: '분기',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),
