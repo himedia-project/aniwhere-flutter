@@ -48,6 +48,11 @@ class CartItemDTO {
   String getImageUrl() {
     return '${ApiUtils.baseUrl}/product/view/$imageName'; // API URL과 이미지 파일 이름을 결합
   }
+
+  // 가격을 포맷팅하는 메서드 추가
+  String getPriceFormatted() {
+    return '${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}';
+  }
 }
 
 class CartPage extends StatefulWidget {
@@ -164,7 +169,7 @@ class _CartPageState extends State<CartPage> {
                     ),
                   ),
                   title: Text(item.productName),
-                  subtitle: Text('${item.price} 원'),
+                  subtitle: Text('${item.getPriceFormatted()} 원'),
                   trailing: IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () async {
@@ -184,8 +189,6 @@ class _CartPageState extends State<CartPage> {
                     );
                   },
                 );
-
-
               },
             );
           }

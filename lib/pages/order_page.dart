@@ -227,7 +227,7 @@ class _OrderPageState extends State<OrderPage> {
                                 ),
                               ),
                               title: Text(item.productName),
-                              subtitle: Text('${item.price} 원'),
+                              subtitle: Text('${item.getPriceFormatted()} 원'),
                             );
                           },
                         ),
@@ -237,7 +237,7 @@ class _OrderPageState extends State<OrderPage> {
                         Text('주문 요약', style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18)),
                         SizedBox(height: 8),
-                        Text('총 주문금액: $totalPrice 원'),
+                        Text('총 주문금액: ${totalPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} 원'),
                         SizedBox(height: 16),
 
                         // 결제 수단
