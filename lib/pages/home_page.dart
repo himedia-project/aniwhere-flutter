@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(
-          height: 320,
+          height: 340,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
@@ -251,12 +251,61 @@ class _HomePageState extends State<HomePage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-                        style: const TextStyle(
-                          color: Color(0xFF6B8DD6),
-                          fontSize: 14,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+                            style: const TextStyle(
+                              color: Color(0xFF6B8DD6),
+                              fontSize: 14,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.shopping_cart_outlined,
+                              size: 20,  // 아이콘 크기를 줄임
+                            ),
+                            color: const Color(0xFF6B8DD6),
+                            constraints: const BoxConstraints(),  // 아이콘 버튼의 기본 패딩 제거
+                            padding: EdgeInsets.zero,  // 패딩 제거
+                            onPressed: () async {
+
+                              if (product['adult'] == 'Y') {
+                                final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                                if (!isAdultVerified) return;
+                              }
+
+                              try {
+                                final response = await http.post(
+                                  Uri.parse('${ApiUtils.baseUrl}/cart/add'),
+                                  headers: ApiUtils.getAuthHeaders(context),
+                                  body: jsonEncode({
+                                    'productId': product['id'],
+                                  }),
+                                );
+
+                                if (response.statusCode == 200) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('장바구니에 추가되었습니다')),
+                                  );
+                                } else {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('장바구니 추가에 실패했습니다')),
+                                  );
+                                }
+                              } catch (e) {
+                                print('Error adding to cart: $e');
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('장바구니 추가 중 오류가 발생했습니다')),
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
                       if (product['adult'] == 'Y')
                         Container(

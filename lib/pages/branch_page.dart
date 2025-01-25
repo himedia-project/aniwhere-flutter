@@ -47,7 +47,8 @@ class _BranchPageState extends State<BranchPage> {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = jsonDecode(utf8.decode(response.bodyBytes));
+        final List<dynamic> responseData =
+            jsonDecode(utf8.decode(response.bodyBytes));
         setState(() {
           yearProducts[year] = responseData;
         });
@@ -72,24 +73,25 @@ class _BranchPageState extends State<BranchPage> {
           ),
         ),
         SizedBox(
-          height: 320,
+          height: 340,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
             padding: const EdgeInsets.only(left: 16, right: 8),
             itemBuilder: (context, index) {
               final product = products[index];
-              final String imageUrl = product['uploadFileNames'] != null && 
-                                    product['uploadFileNames'].isNotEmpty
-                    ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
-                    : '';
+              final String imageUrl = product['uploadFileNames'] != null &&
+                      product['uploadFileNames'].isNotEmpty
+                  ? '${ApiUtils.baseUrl}/product/view/${product['uploadFileNames'][0]}'
+                  : '';
               return GestureDetector(
                 onTap: () async {
                   if (product['adult'] == 'Y') {
-                    final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                    final isAdultVerified =
+                        await ApiUtils.checkAdultVerification(context);
                     if (!isAdultVerified) return;
                   }
-                  
+
                   Navigator.pushNamed(
                     context,
                     '/product_detail',
@@ -140,12 +142,63 @@ class _BranchPageState extends State<BranchPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 8),
-                      Text(
-                        '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
-                        style: const TextStyle(
-                          color: Color(0xFF6B8DD6),
-                          fontSize: 14,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '₩${NumberFormat('#,###').format(product['price'] ?? 0)}',
+                            style: const TextStyle(
+                              color: Color(0xFF6B8DD6),
+                              fontSize: 14,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.shopping_cart_outlined,
+                              size: 20,
+                            ),
+                            color: const Color(0xFF6B8DD6),
+                            constraints: const BoxConstraints(),
+                            padding: EdgeInsets.zero,
+                            onPressed: () async {
+                              if (product['adult'] == 'Y') {
+                                final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+                                if (!isAdultVerified) return;
+                              }
+
+                              try {
+                                final response = await http.post(
+                                  Uri.parse('${ApiUtils.baseUrl}/cart/add'),
+                                  headers: ApiUtils.getAuthHeaders(context),
+                                  body: jsonEncode({
+                                    'productId': product['id'],
+                                  }),
+                                );
+
+                                if (response.statusCode == 200) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('장바구니에 추가되었습니다')),
+                                  );
+                                } else {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('장바구니 추가에 실패했습니다')),
+                                  );
+                                }
+                              } catch (e) {
+                                print('Error adding to cart: $e');
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('장바구니 추가 중 오류가 발생했습니다')),
+                                );
+                              }
+                            },
+                          ),
+                        ],
                       ),
                       if (product['adult'] == 'Y')
                         Container(
@@ -205,4 +258,4 @@ class _BranchPageState extends State<BranchPage> {
       bottomNavigationBar: const CommonBottomNavigation(currentIndex: 1),
     );
   }
-} 
+}
