@@ -141,8 +141,7 @@ class _MyPageState extends State<MyPage> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundColor: Colors.grey[200],
-                    child: const Icon(Icons.person, size: 40, color: Colors.grey),
+                    backgroundImage: const AssetImage('assets/profile.jpg'),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
