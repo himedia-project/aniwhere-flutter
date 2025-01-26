@@ -1,21 +1,20 @@
 import 'package:aniwhere_flutter/pages/branch_page.dart';
+import 'package:aniwhere_flutter/pages/cart_page.dart';
 import 'package:aniwhere_flutter/pages/home_page.dart';
+import 'package:aniwhere_flutter/pages/join_page.dart';
 import 'package:aniwhere_flutter/pages/login_page.dart';
 import 'package:aniwhere_flutter/pages/my_page.dart';
+import 'package:aniwhere_flutter/pages/order_page.dart';
+import 'package:aniwhere_flutter/pages/orderhist_page.dart';
+import 'package:aniwhere_flutter/pages/product_detail_page.dart';
+import 'package:aniwhere_flutter/pages/product_list_page.dart';
+import 'package:aniwhere_flutter/pages/splash_screen.dart';
+import 'package:aniwhere_flutter/providers/order_provider.dart';
 import 'package:aniwhere_flutter/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:aniwhere_flutter/pages/order_page.dart';
-import 'package:aniwhere_flutter/pages/cart_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
-import 'package:aniwhere_flutter/pages/orderhist_page.dart';
-import 'package:aniwhere_flutter/pages/join_page.dart';
-import 'package:aniwhere_flutter/pages/splash_screen.dart';
-import 'package:aniwhere_flutter/pages/product_detail_page.dart';
-import 'package:aniwhere_flutter/providers/order_provider.dart';
-import 'package:aniwhere_flutter/pages/product_list_page.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
