@@ -64,6 +64,25 @@ class _JoinPageState extends State<JoinPage> {
     }
   }
 
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      locale: const Locale('ko', 'KR'),  // 한국어 달력
+    );
+    
+    if (picked != null) {
+      // YYMMDD 형식으로 변환
+      String formattedDate = 
+        '${picked.year.toString().substring(2)}${picked.month.toString().padLeft(2, '0')}${picked.day.toString().padLeft(2, '0')}';
+      setState(() {
+        _birthdayController.text = formattedDate;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,8 +119,10 @@ class _JoinPageState extends State<JoinPage> {
                 decoration: const InputDecoration(
                   hintText: '생년월일 6자리 (YYMMDD)',
                   border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.calendar_today),  // 달력 아이콘 추가
                 ),
-                keyboardType: TextInputType.number,
+                readOnly: true,  // 직접 입력 방지
+                onTap: _selectDate,  // 터치하면 달력 표시
               ),
               const SizedBox(height: 16),
               TextField(
