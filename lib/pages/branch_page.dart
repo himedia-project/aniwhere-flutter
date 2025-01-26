@@ -234,6 +234,10 @@ class _BranchPageState extends State<BranchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
+        ),
         title: Text(
           '연도별 작품',
           style: GoogleFonts.poppins(
