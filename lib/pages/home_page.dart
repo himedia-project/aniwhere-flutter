@@ -264,13 +264,12 @@ class _HomePageState extends State<HomePage> {
                           IconButton(
                             icon: const Icon(
                               Icons.shopping_cart_outlined,
-                              size: 20,  // 아이콘 크기를 줄임
+                              size: 20,
                             ),
-                            color: const Color(0xFF6B8DD6),
-                            constraints: const BoxConstraints(),  // 아이콘 버튼의 기본 패딩 제거
-                            padding: EdgeInsets.zero,  // 패딩 제거
+                            color: const Color(0xFF757575),
+                            constraints: const BoxConstraints(),
+                            padding: EdgeInsets.zero,
                             onPressed: () async {
-
                               if (product['adult'] == 'Y') {
                                 final isAdultVerified = await ApiUtils.checkAdultVerification(context);
                                 if (!isAdultVerified) return;

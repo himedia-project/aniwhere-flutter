@@ -165,7 +165,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                           Icons.shopping_cart_outlined,
                                           size: 20,
                                         ),
-                                        color: const Color(0xFF6B8DD6),
+                                        color: const Color(0xFF757575),
                                         constraints: const BoxConstraints(),
                                         padding: EdgeInsets.zero,
                                         onPressed: () async {
