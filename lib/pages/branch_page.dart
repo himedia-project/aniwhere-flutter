@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../util/api_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/common_bottom_navigation.dart';
+import '../providers/user_provider.dart';
 
 class BranchPage extends StatefulWidget {
   const BranchPage({super.key});
@@ -86,12 +88,22 @@ class _BranchPageState extends State<BranchPage> {
                   : '';
               return GestureDetector(
                 onTap: () async {
+                  final userProvider = context.read<UserProvider>();
+                  
                   if (product['adult'] == 'Y') {
-                    final isAdultVerified =
-                        await ApiUtils.checkAdultVerification(context);
+                    if (!userProvider.isLoggedIn) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+                      );
+                      Navigator.pushReplacementNamed(context, '/login');
+                      return;
+                    }
+                    
+                    final isAdultVerified = await ApiUtils.checkAdultVerification(context);
                     if (!isAdultVerified) return;
                   }
 
+                  if (!mounted) return;
                   Navigator.pushNamed(
                     context,
                     '/product_detail',
@@ -161,6 +173,16 @@ class _BranchPageState extends State<BranchPage> {
                             constraints: const BoxConstraints(),
                             padding: EdgeInsets.zero,
                             onPressed: () async {
+                              final userProvider = context.read<UserProvider>();
+                              
+                              if (!userProvider.isLoggedIn) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+                                );
+                                Navigator.pushReplacementNamed(context, '/login');
+                                return;
+                              }
+
                               if (product['adult'] == 'Y') {
                                 final isAdultVerified = await ApiUtils.checkAdultVerification(context);
                                 if (!isAdultVerified) return;

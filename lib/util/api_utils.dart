@@ -23,7 +23,7 @@ class ApiUtils {
   static Future<bool> checkAdultVerification(BuildContext context) async {
     try {
       final response = await http.get(
-        Uri.parse('${ApiUtils.baseUrl}/member/adult'),
+        Uri.parse('${baseUrl}/member/adult'),
         headers: getAuthHeaders(context),
       );
 

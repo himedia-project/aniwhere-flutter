@@ -118,6 +118,19 @@ class _MyPageState extends State<MyPage> {
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
     
+    // 로그인 체크
+    if (!userProvider.isLoggedIn) {
+      // 비동기로 처리하여 build 메서드가 즉시 반환될 수 있도록 함
+      Future.microtask(() => 
+        Navigator.pushReplacementNamed(context, '/login')
+      );
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('마이페이지'),

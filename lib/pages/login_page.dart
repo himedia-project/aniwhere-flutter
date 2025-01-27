@@ -46,8 +46,12 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         print("data: ${data.toString()}");
-        // Navigate to HomePage using named route
-        Navigator.pushReplacementNamed(context, '/home');
+        // Replace pushReplacementNamed with pushNamedAndRemoveUntil
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home',
+          (route) => false,
+        );
       } else {
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
@@ -121,7 +125,11 @@ class _LoginPageState extends State<LoginPage> {
           roles: List<String>.from(data['roles']),
           accessToken: data['accessToken'],
         );
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home',
+          (route) => false,
+        );
       } else {
         _showErrorMessage('로그인에 실패했습니다.');
       }
@@ -139,6 +147,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/home',
+            (route) => false,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),

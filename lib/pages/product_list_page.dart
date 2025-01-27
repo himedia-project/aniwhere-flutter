@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../util/api_utils.dart';
 import '../widgets/common_bottom_navigation.dart';
+import '../providers/user_provider.dart';
 
 class ProductListPage extends StatefulWidget {
   final String title;
@@ -57,6 +59,50 @@ class _ProductListPageState extends State<ProductListPage> {
     }
   }
 
+  Future<void> _addToCart(dynamic product) async {
+    final userProvider = context.read<UserProvider>();
+    
+    // 로그인 체크
+    if (!userProvider.isLoggedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
+    // 성인 컨텐츠 체크
+    if (product['adult'] == 'Y') {
+      final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+      if (!isAdultVerified) return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiUtils.baseUrl}/cart/add'),
+        headers: ApiUtils.getAuthHeaders(context),
+        body: jsonEncode({
+          'productId': product['id'],
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('장바구니에 추가되었습니다')));
+      } else {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('장바구니 추가에 실패했습니다')));
+      }
+    } catch (e) {
+      print('Error adding to cart: $e');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('장바구니 추가 중 오류가 발생했습니다')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,12 +132,23 @@ class _ProductListPageState extends State<ProductListPage> {
 
                     return GestureDetector(
                       onTap: () async {
+                        final userProvider = context.read<UserProvider>();
+                        
                         if (product['adult'] == 'Y') {
-                          final isAdultVerified =
-                              await ApiUtils.checkAdultVerification(context);
+                          // 로그인 체크
+                          if (!userProvider.isLoggedIn) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+                            );
+                            Navigator.pushReplacementNamed(context, '/login');
+                            return;
+                          }
+                          
+                          final isAdultVerified = await ApiUtils.checkAdultVerification(context);
                           if (!isAdultVerified) return;
                         }
 
+                        if (!mounted) return;
                         Navigator.pushNamed(
                           context,
                           '/product_detail',
@@ -169,52 +226,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                         constraints: const BoxConstraints(),
                                         padding: EdgeInsets.zero,
                                         onPressed: () async {
-                                          if (product['adult'] == 'Y') {
-                                            final isAdultVerified =
-                                                await ApiUtils
-                                                    .checkAdultVerification(
-                                                        context);
-                                            if (!isAdultVerified) return;
-                                          }
-
-                                          try {
-                                            final response = await http.post(
-                                              Uri.parse(
-                                                  '${ApiUtils.baseUrl}/cart/add'),
-                                              headers: ApiUtils.getAuthHeaders(
-                                                  context),
-                                              body: jsonEncode({
-                                                'productId': product['id'],
-                                              }),
-                                            );
-
-                                            if (response.statusCode == 200) {
-                                              if (!context.mounted) return;
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content:
-                                                        Text('장바구니에 추가되었습니다')),
-                                              );
-                                            } else {
-                                              if (!context.mounted) return;
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        '장바구니 추가에 실패했습니다')),
-                                              );
-                                            }
-                                          } catch (e) {
-                                            print('Error adding to cart: $e');
-                                            if (!context.mounted) return;
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  content: Text(
-                                                      '장바구니 추가 중 오류가 발생했습니다')),
-                                            );
-                                          }
+                                          await _addToCart(product);
                                         },
                                       ),
                                     ],

@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import '../util/api_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../widgets/common_bottom_navigation.dart';
+import '../providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'home_page.dart';
 
@@ -21,10 +23,36 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Map<String, dynamic>? productDetail;
   List<dynamic> tags = [];
 
+  Future<void> _checkAdultContent() async {
+    if (productDetail?['adult'] == 'Y') {
+      final userProvider = context.read<UserProvider>();
+      
+      // 로그인 체크
+      if (!userProvider.isLoggedIn) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+        );
+        Navigator.pushReplacementNamed(context, '/login');
+        return;
+      }
+
+      // 성인 인증 체크
+      final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+      if (!isAdultVerified) {
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    fetchProductDetail();
+    fetchProductDetail().then((_) {
+      if (mounted) {
+        _checkAdultContent();
+      }
+    });
     fetchProductTags();
   }
 
@@ -63,6 +91,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Future<void> addToCart() async {
+    final userProvider = context.read<UserProvider>();
+    
+    // 로그인 체크
+    if (!userProvider.isLoggedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
+    // 성인 컨텐츠 체크
+    if (productDetail!['adult'] == 'Y') {
+      final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+      if (!isAdultVerified) return;
+    }
+
     try {
       final response = await http.post(
         Uri.parse('${ApiUtils.baseUrl}/cart/add'),
@@ -94,6 +139,23 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   Future<void> directOrder() async {
+    final userProvider = context.read<UserProvider>();
+    
+    // 로그인 체크
+    if (!userProvider.isLoggedIn) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
+    // 성인 컨텐츠 체크
+    if (productDetail!['adult'] == 'Y') {
+      final isAdultVerified = await ApiUtils.checkAdultVerification(context);
+      if (!isAdultVerified) return;
+    }
+
     final cartItem = {
       'productId': widget.productId,
       'name': productDetail!['name'],
@@ -101,15 +163,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       'imageName': productDetail!['uploadFileNames'] != null &&
           productDetail!['uploadFileNames'].isNotEmpty
           ? productDetail!['uploadFileNames'][0]
-          : '', // 이미지 이름 추가
+          : '',
     };
 
+    if (!mounted) return;
     Navigator.pushNamed(context, '/order', arguments: {
       'product': cartItem,
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {

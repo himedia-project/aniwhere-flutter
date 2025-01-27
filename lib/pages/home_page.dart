@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(
-          height: 340,
+          height: 380,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
@@ -189,18 +189,29 @@ class _HomePageState extends State<HomePage> {
                   : '';
               return GestureDetector(
                 onTap: () async {
+                  final userProvider = context.read<UserProvider>();
+                  
+                  // 성인 컨텐츠 체크
                   if (product['adult'] == 'Y') {
+                    // 로그인 체크
+                    if (!userProvider.isLoggedIn) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+                      );
+                      Navigator.pushReplacementNamed(context, '/login');
+                      return;
+                    }
+                    
+                    // 성인 인증 체크
                     final isAdultVerified = await ApiUtils.checkAdultVerification(context);
                     if (!isAdultVerified) return;
                   }
-                  
-                  Navigator.push(
+
+                  if (!mounted) return;
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductDetailPage(
-                        productId: product['id'],
-                      ),
-                    ),
+                    '/product_detail',
+                    arguments: {'productId': product['id']},
                   );
                 },
                 child: Container(
@@ -270,6 +281,17 @@ class _HomePageState extends State<HomePage> {
                             constraints: const BoxConstraints(),
                             padding: EdgeInsets.zero,
                             onPressed: () async {
+                              final userProvider = context.read<UserProvider>();
+                              
+                              // 로그인 체크
+                              if (!userProvider.isLoggedIn) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+                                );
+                                Navigator.pushReplacementNamed(context, '/login');
+                                return;
+                              }
+
                               if (product['adult'] == 'Y') {
                                 final isAdultVerified = await ApiUtils.checkAdultVerification(context);
                                 if (!isAdultVerified) return;
