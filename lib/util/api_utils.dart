@@ -4,9 +4,12 @@ import '../providers/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
+import '../config/app_config.dart';
 
 class ApiUtils {
-  static const String baseUrl = 'http://10.0.2.2:8080/api';
+  // static const String baseUrl = 'http://10.0.2.2:8080/api';
+  // static const String baseUrl = 'http://15.165.246.208:8080/api';
+  static String get baseUrl => AppConfig.apiBaseUrl;
 
   static Map<String, String> getAuthHeaders(BuildContext context) {
     final token = context.read<UserProvider>().accessToken;
@@ -23,7 +26,7 @@ class ApiUtils {
   static Future<bool> checkAdultVerification(BuildContext context) async {
     try {
       final response = await http.get(
-        Uri.parse('${baseUrl}/member/adult'),
+        Uri.parse('$baseUrl/member/adult'),
         headers: getAuthHeaders(context),
       );
 

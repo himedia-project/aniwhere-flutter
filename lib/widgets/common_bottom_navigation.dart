@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/user_provider.dart';
 
 class CommonBottomNavigation extends StatelessWidget {
   final int currentIndex;
@@ -48,9 +50,27 @@ class CommonBottomNavigation extends StatelessWidget {
             Navigator.pushReplacementNamed(context, '/branch');
             break;
           case 2:
+            // 장바구니 클릭 시 로그인 체크
+            final userProvider = context.read<UserProvider>();
+            if (!userProvider.isLoggedIn) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+              );
+              Navigator.pushReplacementNamed(context, '/login');
+              return;
+            }
             Navigator.pushReplacementNamed(context, '/cart');
             break;
           case 3:
+            // 마이페이지 클릭 시 로그인 체크
+            final userProvider = context.read<UserProvider>();
+            if (!userProvider.isLoggedIn) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('로그인이 필요한 서비스입니다.')),
+              );
+              Navigator.pushReplacementNamed(context, '/login');
+              return;
+            }
             Navigator.pushReplacementNamed(context, '/mypage');
             break;
         }

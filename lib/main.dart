@@ -15,8 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
+  // .env 파일 로드
+  await dotenv.load(fileName: ".env");
   KakaoSdk.init(nativeAppKey: '64700a6255e1a4d6afd338b83bca917b');
   runApp(
     MultiProvider( // MultiProvider로 변경
