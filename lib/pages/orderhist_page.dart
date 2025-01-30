@@ -168,7 +168,16 @@ class _OrderHistPageState extends State<OrderHistPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('오류: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('주문 내역이 없습니다.'));
+            return Center(
+              child: Text(
+                '주문 내역이 없습니다.',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
+              ),
+            );
           } else {
             final orders = snapshot.data!;
             return ListView.builder(
