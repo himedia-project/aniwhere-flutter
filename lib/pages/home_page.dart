@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(8),
                             child: CachedNetworkImage(
                               imageUrl: imageUrl,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.contain,
                               placeholder: (context, url) => Container(
                                 color: Colors.grey[300],
                                 child: const Center(
@@ -373,6 +373,7 @@ class _HomePageState extends State<HomePage> {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24),
+      margin: const EdgeInsets.only(top: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -458,7 +459,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
-              aspectRatio: 16 / 11,
+              aspectRatio: 16 / 9,
               child: Stack(
                 children: [
                   PageView.builder(
@@ -472,7 +473,7 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (context, index) {
                       return Image.asset(
                         bannerImages[index],
-                        fit: BoxFit.cover,
+                        fit: BoxFit.cover,  // 이미지가 비율을 유지하면서 영역을 채우도록 설정
                       );
                     },
                   ),

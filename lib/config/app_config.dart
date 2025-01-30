@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConfig {
-  static const environment = String.fromEnvironment('ENVIRONMENT', defaultValue: 'dev');
+  static const environment = String.fromEnvironment('ENVIRONMENT', defaultValue: 'local');
   
   static bool get isDevelopment => environment == 'local';
   static bool get isProduction => environment == 'prod';
