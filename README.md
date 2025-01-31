@@ -2,6 +2,10 @@
 
 애니메이션 작품 판매 플랫폼 Aniwhere의 Flutter 모바일 애플리케이션입니다.
 
+![aniwhere_detail](https://github.com/user-attachments/assets/5fa00aaf-a871-4f7c-93a2-a760073bd0b7)
+
+
+
 ## 주요 기능
 
 - 작품 목록 조회 및 검색
