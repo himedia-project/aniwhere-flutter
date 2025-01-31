@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
 import '../util/api_utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../widgets/common_bottom_navigation.dart';
 import '../providers/user_provider.dart';
 import 'package:provider/provider.dart';
+
 
 import 'home_page.dart';
 
@@ -212,18 +214,30 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 11,
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[300],
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[300],
-                  child: const Center(child: Icon(Icons.error)),
+            GestureDetector(
+              onTap: () {
+                if (imageUrl.isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ImageViewerPage(imageUrl: imageUrl),
+                    ),
+                  );
+                }
+              },
+              child: AspectRatio(
+                aspectRatio: 16 / 11,
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[300],
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[300],
+                    child: const Center(child: Icon(Icons.error)),
+                  ),
                 ),
               ),
             ),
@@ -422,6 +436,36 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         ),
       ),
       bottomNavigationBar: const CommonBottomNavigation(currentIndex: -1),
+    );
+  }
+}
+
+class ImageViewerPage extends StatelessWidget {
+  final String imageUrl;
+
+  const ImageViewerPage({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: PhotoView(
+        imageProvider: CachedNetworkImageProvider(imageUrl),
+        // 이미지 크기 조절 가능
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 2,
+        backgroundDecoration: const BoxDecoration(color: Colors.black),
+        loadingBuilder: (context, event) => const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+        errorBuilder: (context, error, stackTrace) => const Center(
+          child: Icon(Icons.error, color: Colors.white),
+        ),
+      ),
     );
   }
 } 
