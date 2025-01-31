@@ -4,8 +4,6 @@
 
 ![aniwhere_detail](https://github.com/user-attachments/assets/5fa00aaf-a871-4f7c-93a2-a760073bd0b7)
 
-
-
 ## 주요 기능
 
 - 작품 목록 조회 및 검색
@@ -55,10 +53,46 @@
 ## 설치 및 실행
 
 1. Flutter 개발 환경 설정
-2. 프로젝트 클론
-3. Run Configuration: `--dart-define=ENVIRONMENT=dev 또는 prod`
 
-4. build: `flutter build apk --release --dart-define=ENVIRONMENT=prod`
+   - Flutter SDK 설치 (https://flutter.dev/docs/get-started/install)
+   - Android Studio 또는 VS Code 설치
+   - Flutter 및 Dart 플러그인 설치
+
+2. 프로젝트 클론 및 설정
+
+   ```bash
+   git clone https://github.com/your-username/aniwhere-flutter.git
+   cd aniwhere-flutter
+   flutter pub get
+   ```
+
+3. 환경 설정
+
+   - `lib/config/` 디렉토리에서 환경변수 설정
+   - 개발 환경: `--dart-define=ENVIRONMENT=dev`
+   - 프로덕션 환경: `--dart-define=ENVIRONMENT=prod`
+
+4. 실행
+
+   ```bash
+   # 개발 환경
+   flutter run --dart-define=ENVIRONMENT=dev
+
+   # 프로덕션 환경
+   flutter run --dart-define=ENVIRONMENT=prod
+   ```
+
+5. 빌드
+
+   ```bash
+   # Android APK 빌드
+   flutter build apk --release --dart-define=ENVIRONMENT=prod
+
+   # iOS 빌드
+   flutter build ios --release --dart-define=ENVIRONMENT=prod
+   ```
+
+## 프로젝트 구조
 
 ## 시현영상
 
