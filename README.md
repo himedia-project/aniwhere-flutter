@@ -4,6 +4,8 @@
 
 ![aniwhere_detail](https://github.com/user-attachments/assets/5fa00aaf-a871-4f7c-93a2-a760073bd0b7)
 
+📌 시연영상 - https://www.youtube.com/watch?v=yDXctUkvOLI&list=PLrtykmiaS87ui_Krh9-BV6cQjmIm2siSH&index=2
+
 ## 주요 기능
 
 - 작품 목록 조회 및 검색
